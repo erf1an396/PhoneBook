@@ -1,0 +1,30 @@
+﻿@model PhoneBook.Models.RegisterViewModel
+@{
+    Layout = "_AuthLayout";
+    ViewData["Title"] = "Register";
+
+}
+
+<form method="post">
+    <h1>@ViewData["Title"]</h1>
+    <div>
+        <input asp-for="UserName" type="text" placeholder="Username" required="" id="UserName" />
+        <span asp-validation-for="UserName"></span>
+    </div>
+
+    <div>
+        <input asp-for="FullName" id="FullName" type="text" placeholder="Fullname"  />
+        <span asp-validation-for="FullName"></span>
+    </div>
+
+    <div>
+        <input asp-for="Password" id="Password" type="password" placeholder="Password" required="" />
+        <span asp-validation-for="Password"></span>
+    </div>
+
+    <div>
+        <input type="submit" value="Register" />
+
+        <a href="/auth/login">Login</a>
+    </div>
+</form> 

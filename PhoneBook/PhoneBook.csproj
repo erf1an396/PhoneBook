@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\jQury\AddContact.js" />
+    <None Include="wwwroot\jQury\DeleteContact.js" />
+    <None Include="wwwroot\jQury\jquery-3.7.1.min.js" />
+    <None Include="wwwroot\jQury\UpdateContact.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PhoneBook.CoreLayer\PhoneBook.CoreLayer.csproj" />
+    <ProjectReference Include="..\PhoneBook.DataLayer\PhoneBook.DataLayer.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,162 @@
+﻿
+@font-face {
+    font-family: "Edu AU VIC WA NT Hand", cursive;
+    src: url("./font/Edu_AU_VIC_WA_NT_Hand/static/EduAUVICWANTHand-Bold.ttf") format("ttf");
+    font-optical-sizing: auto;
+    font-weight: Bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Edu AU VIC WA NT Hand", cursive;
+    src: url("./font/Edu_AU_VIC_WA_NT_Hand/static/EduAUVICWANTHand-Medium.ttf") format("ttf");
+    font-optical-sizing: auto;
+    font-weight: Medium;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Edu AU VIC WA NT Hand", cursive;
+    src: url("./font/Edu_AU_VIC_WA_NT_Hand/static/EduAUVICWANTHand-Regular.ttf") format("ttf");
+    font-optical-sizing: auto;
+    font-weight: Regular;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Edu AU VIC WA NT Hand", cursive;
+    src: url("./font/Edu_AU_VIC_WA_NT_Hand/static/EduAUVICWANTHand-SemiBold.ttf") format("ttf");
+    font-optical-sizing: auto;
+    font-weight: SemiBold;
+    font-style: normal;
+}
+
+* {
+    font-family: "Edu AU VIC WA NT Hand", cursive ;
+}
+
+
+/* General settings */
+body {
+    font-family: "Edu AU VIC WA NT Hand", cursive !important;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+}
+
+button {
+    font-family: "Edu AU VIC WA NT Hand", cursive
+}
+
+/* Main container settings */
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+}
+
+/* Title settings */
+h1, h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: Bold;
+}
+
+/* Search bar settings */
+.search-bar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+    .search-bar input[type="text"] {
+        width: 80%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 25px;
+        outline: none;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+
+        .search-bar input[type="text"]:focus {
+            border-color: #336699;
+        }
+
+/* Table settings */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+    .table th, .table td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .table th {
+        background-color: #336699;
+        color: #fff;
+    }
+
+    .table tr:hover {
+        background-color: #eef;
+    }
+
+/* Button settings */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #fff;
+    background-color: #336699;
+    border: none;
+    border-radius: 25px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 5px;
+    transition: all 0.3s ease;
+    font-size: 16px;
+}
+
+    .btn:hover {
+        background-color: #27496d;
+    }
+
+/* Form settings */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+    form label {
+        font-weight: Bold;
+    }
+
+    form input[type="text"], form input[type="email"], form input[type="tel"] {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 25px;
+        outline: none;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+
+        form input[type="text"]:focus, form input[type="email"]:focus, form input[type="tel"]:focus {
+            border-color: #336699;
+        }
+
+    form .btn {
+        width: fit-content;
+        align-self: center;
+    }

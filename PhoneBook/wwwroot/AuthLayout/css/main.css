@@ -1,0 +1,173 @@
+
+@font-face {
+    font-family: "Edu AU VIC WA NT Hand", cursive;
+    src: url("../../font/Edu_AU_VIC_WA_NT_Hand/static/EduAUVICWANTHand-Bold.ttf") format("ttf");
+    font-optical-sizing: auto;
+    font-weight: Bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Edu AU VIC WA NT Hand", cursive;
+    src: url("../../font/Edu_AU_VIC_WA_NT_Hand/static/EduAUVICWANTHand-SemiBold.ttf") format("ttf");
+    font-optical-sizing: auto;
+    font-weight: Medium;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Edu AU VIC WA NT Hand", cursive;
+    src: url("../../font/Edu_AU_VIC_WA_NT_Hand/static/EduAUVICWANTHand-Medium.ttf") format("ttf");
+    font-optical-sizing: auto;
+    font-weight: Regular;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Edu AU VIC WA NT Hand", cursive;
+    src: url("../../font/Edu_AU_VIC_WA_NT_Hand/static/EduAUVICWANTHand-Regular.ttf") format("ttf");
+    font-optical-sizing: auto;
+    font-weight: SemiBold;
+    font-style: normal;
+}
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend, table, caption,
+tbody, tfoot, thead, tr, th, td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+}
+
+.error-message {
+    color: #e74c3c; 
+    font-size: 14px;
+    margin-top: 5px;
+    display: none; 
+}
+
+
+body {
+    background: #2c3e50;
+    color: #000;
+    font: 14px "Edu AU VIC WA NT Hand", cursive ;
+    margin: 0 auto;
+    padding: 0;
+    position: relative;
+    direction: rtl;
+    text-align: right;
+}
+
+h1 {
+    font-size: 28px;
+}
+
+h2 {
+    font-size: 26px;
+}
+
+h3 {
+    font-size: 18px;
+}
+
+h4 {
+    font-size: 16px;
+}
+
+h5 {
+    font-size: 14px;
+}
+
+h6 {
+    font-size: 12px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #ecf0f1;
+}
+
+small {
+    font-size: 10px;
+}
+
+b, strong {
+    font-weight: bold;
+}
+
+a {
+    text-decoration: none;
+    color: #3498db;
+}
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+.container {
+    margin: 25px auto;
+    position: relative;
+    width: 300px;
+}
+
+#content {
+    background: #34495e;
+    padding: 25px 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+    #content h1 {
+        margin: 10px 0 20px;
+        font-size: 24px;
+        color: #ecf0f1;
+    }
+
+    #content form {
+        margin: 0;
+    }
+
+        #content form input[type="text"],
+        #content form input[type="password"] {
+            width: calc(100% - 40px);
+            margin: 10px 0;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background: #ecf0f1;
+            font-size: 14px;
+            color: #2c3e50;
+            font-family: "Edu AU VIC WA NT Hand", cursive ;
+        }
+
+        #content form input[type="submit"] {
+            background: #e74c3c;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            color: #ecf0f1;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-family: "Edu AU VIC WA NT Hand", cursive;
+        }
+
+            #content form input[type="submit"]:hover {
+                background: #c0392b;
+            }
+
+        #content form div a {
+            color: #95a5a6;
+            font-size: 12px;
+            margin-top: 15px;
+            display: block;
+        }

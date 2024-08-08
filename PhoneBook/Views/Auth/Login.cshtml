@@ -1,0 +1,26 @@
+﻿@model PhoneBook.Models.LoginViewModel
+@{
+    Layout = "_AuthLayout";
+    ViewData["Title"] = "Login";
+}
+
+<form method="post">
+    <h1>@ViewData["Title"]</h1>
+    <div>
+        <input type="text" placeholder="Username" required="" asp-for="UserName" />
+        <span  asp-validation-for="UserName"></span>
+        
+    </div>
+    <div>
+        <input type="password" placeholder="Password" required="" asp-for="Password" />
+        <span  asp-validation-for="Password"></span>
+    </div>
+    <div>
+        <input type="submit" value="Login" />
+        <a asp-action="Register">Register</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
