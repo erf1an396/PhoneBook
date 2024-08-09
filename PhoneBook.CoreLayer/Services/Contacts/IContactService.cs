@@ -15,5 +15,7 @@ namespace PhoneBook.CoreLayer.Services.Contacts
         Task AddContactAsync(CreateContactDto contactDto);
         Task UpdateContactAsync(EditContactDto contactDto);
         Task DeleteContactAsync(int id);
+
+        //Task<ContactDto> GetContactByName(string name);
     }
 }

@@ -15,11 +15,13 @@ namespace PhoneBook.CoreLayer.Services.Contacts
 
     {
         private readonly AppDbContext _context;
+        private readonly IUserContextService _userContextService;
         
-        public ContactService(AppDbContext context)
+        public ContactService(AppDbContext context, IUserContextService userContextService)
         {
             
             _context = context;
+            _userContextService = userContextService;
             
         }
 
@@ -27,6 +29,10 @@ namespace PhoneBook.CoreLayer.Services.Contacts
 
         public async Task<IEnumerable<ContactDto>> GetContactsAsync(int userId)
         {
+            var userId1 = _userContextService.GetUserId();
+            var userId2 = int.Parse(userId1);
+            userId = userId2;
+
             return await _context.Contacts
                 .Where(c => c.UserId == userId)
                 .Select(c => new ContactDto
@@ -47,6 +53,8 @@ namespace PhoneBook.CoreLayer.Services.Contacts
 
         public async Task<ContactDto> GetContactByIdAsync(int id)
         {
+            
+
             var contact = await _context.Contacts.FindAsync(id);
             if (contact == null) return null;
 
@@ -64,13 +72,20 @@ namespace PhoneBook.CoreLayer.Services.Contacts
 
         public async Task AddContactAsync(CreateContactDto contactDto)
         {
+            var userId = _userContextService.GetUserId();
+            var userId2 = int.Parse(userId);
+            
+
+
             var contact = new Contact
             {
                 Name = contactDto.Name,
                 PhoneNumber = contactDto.PhoneNumber,
                 Email = contactDto.Email,
-                UserId = contactDto.UserId, 
+                UserId = userId2, 
                 IsDeleted = false,
+                Id = contactDto.ContactId
+
             };
 
             _context.Contacts.Add(contact);

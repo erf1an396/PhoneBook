@@ -12,9 +12,7 @@
 
   <ItemGroup>
     <None Include="wwwroot\jQury\AddContact.js" />
-    <None Include="wwwroot\jQury\DeleteContact.js" />
     <None Include="wwwroot\jQury\jquery-3.7.1.min.js" />
-    <None Include="wwwroot\jQury\UpdateContact.js" />
   </ItemGroup>
 
   <ItemGroup>
