@@ -115,6 +115,51 @@ namespace PhoneBook.CoreLayer.Services.Contacts
             }
         }
 
-        
+        //public async Task<IEnumerable<ContactDto>> GetContactByNameAsync(string name , int userId)
+        //{
+        //    var userId1 = _userContextService.GetUserId();
+        //    var userId2 = int.Parse(userId1);
+        //    userId = userId2;
+
+        //     return  await _context.Contacts
+        //        .Where(c => c.UserId == userId && c.Name == name)
+        //        .Select(c => new ContactDto
+        //        {
+        //            Id = c.Id,
+        //            Name = c.Name,
+        //            PhoneNumber = c.PhoneNumber,
+        //            Email = c.Email,
+        //            UserId = c.UserId,
+        //            IsDeleted = false,
+        //            CreatedAt = c.CreatedAt,
+
+
+
+        //        }).ToListAsync();
+
+
+
+        //}
+
+        public IEnumerable<ContactDto> SearchContactsByName(string searchText , int userId  )
+        {
+
+           
+                return _context.Contacts
+                    .Where(c => c.Name.Contains(searchText) && c.UserId == userId)
+                    .Select(c => new ContactDto
+                    {
+                        Name = c.Name,
+                        PhoneNumber = c.PhoneNumber,
+                        Email = c.Email
+                    }).ToList();
+            
+
+            
+            
+            
+        }
+
+
     }
 }

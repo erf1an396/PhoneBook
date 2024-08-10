@@ -168,17 +168,38 @@
         });
     }
 
+    $('#searchInput').on('keyup', function () {
+        var query = $(this).val();
+
+        $.ajax({
+            url: '/Contact/Search',
+            type: 'GET',
+            data: { searchText: query },
+            success: function (data) {
+                var rows = '';
+                data.forEach(function (contact) {
+                    rows += '<tr>' +
+                        '<td>' + contact.name + '</td>' +
+                        '<td>' + contact.phoneNumber + '</td>' +
+                        '<td>' + contact.email + '</td>' +
+                        '<td>' +
+                        '<button class="btn btn-primary">Update</button> ' +
+                        '<button class="btn btn-danger">Delete</button>' +
+                        '</td>' +
+                        '</tr>';
+                });
+                $('#contactTable tbody').html(rows);
+            }
+        });
+    });
+
    
-
-
+    
     
     $(".update-btn").click(showUpdateModal);
     $(".delete-btn").click(deleteContact);
     loadContacts();
 
 
-    function GetContactByName() {
-        var contactList = $('#contactTable tbody');
-        contactList.empty();
-    }
+    
 });

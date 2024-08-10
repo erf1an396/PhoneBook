@@ -96,5 +96,18 @@ namespace PhoneBook.Controllers
             await _contactService.DeleteContactAsync(id);
             return Json(new { success = true });
         }
+
+
+        [HttpGet]
+        public IActionResult Search(string searchText)
+        {
+
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            
+
+            var contacts = _contactService.SearchContactsByName(searchText, userId);
+
+            return Json(contacts);
+        }
     }
 }
