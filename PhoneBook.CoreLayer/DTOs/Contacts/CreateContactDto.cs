@@ -19,6 +19,11 @@ namespace PhoneBook.CoreLayer.DTOs.Contacts
 
         public string PhoneNumber { get; set; }
 
+        public bool IsValidPhoneNumber()
+        {
+            return PhoneNumber.Length == 10 && PhoneNumber.All(char.IsDigit);
+        }
+
         public int UserId { get; set; }
 
         

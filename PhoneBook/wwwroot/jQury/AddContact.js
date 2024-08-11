@@ -58,6 +58,7 @@
     });
 
     function showUpdateModal() {
+        loadContacts();
         var row = $(this).closest('tr');
         var id = row.data('id');
         var name = row.find('td:eq(0)').text();
@@ -96,6 +97,7 @@
     }
 
     $("#updateContactForm").submit(function (event) {
+        loadContacts();
         event.preventDefault();
 
         var contactData = {

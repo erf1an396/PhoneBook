@@ -36,10 +36,10 @@ namespace PhoneBook.Controllers
 
             
 
-            if (contacts == null || !contacts.Any())
-            {
-                return NotFound();
-            }
+            //if (contacts == null || !contacts.Any())
+            //{
+            //    return NotFound();
+            //}
 
             return Json(contacts);
         }
@@ -48,9 +48,13 @@ namespace PhoneBook.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAjax([FromBody] CreateContactDto contactDto)
         {
-            if (ModelState.IsValid)
+
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            
+
+            if (ModelState.IsValid )
             {
-                await _contactService.AddContactAsync(contactDto);
+                await _contactService.AddContactAsync(contactDto , userId);
                 return Json(new { success = true });
             }
             return Json(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
@@ -101,7 +105,6 @@ namespace PhoneBook.Controllers
         [HttpGet]
         public IActionResult Search(string searchText)
         {
-
             int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             
 

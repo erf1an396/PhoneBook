@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using PhoneBook.CoreLayer.Services.DbInitializer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,8 +41,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IUserService , UserService>();
 builder.Services.AddScoped<IContactService, ContactService>();
 
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IUserContextService, UserContextService>();
+builder.Services.AddScoped<IDBInitialize, DBInitialize>();
+
+
+
+
+
 
 
 //builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
@@ -89,12 +94,16 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.RunDatabaseInitializer();
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
 app.UseAuthorization();
+
+
 
 app.MapControllerRoute(
     name: "default",

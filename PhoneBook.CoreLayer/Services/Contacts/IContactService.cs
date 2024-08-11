@@ -12,7 +12,7 @@ namespace PhoneBook.CoreLayer.Services.Contacts
     {
         Task<IEnumerable<ContactDto>> GetContactsAsync(int userId);
         Task<ContactDto> GetContactByIdAsync(int id);
-        Task AddContactAsync(CreateContactDto contactDto);
+        Task AddContactAsync(CreateContactDto contactDto , int userId);
         Task UpdateContactAsync(EditContactDto contactDto);
         Task DeleteContactAsync(int id);
 

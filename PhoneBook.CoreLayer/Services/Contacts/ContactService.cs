@@ -15,13 +15,13 @@ namespace PhoneBook.CoreLayer.Services.Contacts
 
     {
         private readonly AppDbContext _context;
-        private readonly IUserContextService _userContextService;
         
-        public ContactService(AppDbContext context, IUserContextService userContextService)
+        
+        public ContactService(AppDbContext context)
         {
             
             _context = context;
-            _userContextService = userContextService;
+            
             
         }
 
@@ -29,9 +29,7 @@ namespace PhoneBook.CoreLayer.Services.Contacts
 
         public async Task<IEnumerable<ContactDto>> GetContactsAsync(int userId)
         {
-            var userId1 = _userContextService.GetUserId();
-            var userId2 = int.Parse(userId1);
-            userId = userId2;
+            
 
             return await _context.Contacts
                 .Where(c => c.UserId == userId)
@@ -70,10 +68,9 @@ namespace PhoneBook.CoreLayer.Services.Contacts
             };
         }
 
-        public async Task AddContactAsync(CreateContactDto contactDto)
+        public async Task AddContactAsync(CreateContactDto contactDto , int userId)
         {
-            var userId = _userContextService.GetUserId();
-            var userId2 = int.Parse(userId);
+           
             
 
 
@@ -82,7 +79,7 @@ namespace PhoneBook.CoreLayer.Services.Contacts
                 Name = contactDto.Name,
                 PhoneNumber = contactDto.PhoneNumber,
                 Email = contactDto.Email,
-                UserId = userId2, 
+                UserId = userId, 
                 IsDeleted = false,
                 Id = contactDto.ContactId
 
@@ -146,7 +143,7 @@ namespace PhoneBook.CoreLayer.Services.Contacts
 
            
                 return _context.Contacts
-                    .Where(c => c.Name.Contains(searchText) && c.UserId == userId)
+                    .Where(c => (c.Name.Contains(searchText) || string.IsNullOrEmpty(searchText)) && c.UserId == userId)
                     .Select(c => new ContactDto
                     {
                         Name = c.Name,
