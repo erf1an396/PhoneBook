@@ -31,11 +31,6 @@
     font-style: normal;
 }
 
-* {
-    font-family: "Edu AU VIC WA NT Hand", cursive ;
-}
-
-
 /* General settings */
 body {
     font-family: "Edu AU VIC WA NT Hand", cursive !important;
@@ -46,6 +41,7 @@ body {
 
 button {
     font-family: "Edu AU VIC WA NT Hand", cursive
+     
 }
 
 /* Main container settings */
@@ -125,9 +121,12 @@ h1, h2 {
     font-size: 16px;
 }
 
-    .btn:hover {
-        background-color: #27496d;
-    }
+
+
+
+.btn:hover {
+    background-color: #27496d;
+}
 
 /* Form settings */
 form {
@@ -160,3 +159,7 @@ form {
         width: fit-content;
         align-self: center;
     }
+
+   
+
+

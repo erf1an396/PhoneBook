@@ -12,13 +12,19 @@ namespace PhoneBook.CoreLayer.DTOs.Contacts
 
         public string Name { get; set; }
 
-        public string Email { get; set; }
+        public bool IsValidName()
+        {
+            return !string.IsNullOrWhiteSpace(Name) && Name.Length >= 5;
+        }
 
-        public string PhoneNumber { get; set; }
+        
 
         public bool IsValidPhoneNumber()
         {
-            return PhoneNumber.Length == 10 && PhoneNumber.All(char.IsDigit);
+            return PhoneNumbers.All(p => p.Length == 10 && p[0] != '0' && p.All(char.IsDigit));
         }
+
+        public List<string> PhoneNumbers { get; set; } = new List<string>();
+        public List<string> Emails { get; set; } = new List<string>();
     }
 }

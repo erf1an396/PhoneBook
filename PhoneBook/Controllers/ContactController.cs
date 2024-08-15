@@ -34,14 +34,20 @@ namespace PhoneBook.Controllers
             int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)); 
             var contacts = await _contactService.GetContactsAsync(userId);
 
-            
-
             //if (contacts == null || !contacts.Any())
             //{
             //    return NotFound();
             //}
-
+            
             return Json(contacts);
+        }
+
+        public async Task<IActionResult>GetContactByIdAjax(int Id)
+        {
+            var contact = await _contactService.GetContactByIdAsync(Id);
+
+            return Json(contact);
+
         }
 
 
@@ -52,7 +58,7 @@ namespace PhoneBook.Controllers
             int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             
 
-            if (ModelState.IsValid )
+            if (ModelState.IsValid && contactDto.IsValidPhoneNumber() && contactDto.IsValidName() )
             {
                 await _contactService.AddContactAsync(contactDto , userId);
                 return Json(new { success = true });
@@ -60,33 +66,10 @@ namespace PhoneBook.Controllers
             return Json(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
         }
 
-        //[HttpPost]
-        //public JsonResult Add(ContactDto contact)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        // Code to add the contact to the database
-        //        // For example, using Entity Framework
-        //        _appDbContext.Contacts.Add(new Contact
-        //        {
-        //            Name = contact.Name,
-        //            PhoneNumber = contact.PhoneNumber,
-        //            Email = contact.Email,
-        //            CreatedAt = DateTime.Now
-        //        });
-        //        _appDbContext.SaveChanges();
-
-        //        return Json(new { success = true });
-        //    }
-
-        //    return Json(new { success = false, message = "Invalid data" });
-        //}
-
-
         [HttpPut]
         public async Task<IActionResult> EditAjax([FromBody] EditContactDto contactDto)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && contactDto.IsValidPhoneNumber() && contactDto.IsValidName())
             {
                 await _contactService.UpdateContactAsync(contactDto);
                 return Json(new { success = true });

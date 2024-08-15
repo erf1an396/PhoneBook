@@ -89,6 +89,7 @@ namespace PhoneBook.Controllers
                 Password = model.Password
             });
 
+
             if (result.Status == OperationResultStatus.NotFound)
             {
                 ModelState.AddModelError("UserName", "No information found");

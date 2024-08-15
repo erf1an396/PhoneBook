@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PhoneBook.DataLayer.Context;
 
@@ -11,9 +12,11 @@ using PhoneBook.DataLayer.Context;
 namespace PhoneBook.DataLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240814105331_addPhoneandEmail")]
+    partial class addPhoneandEmail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,7 +72,7 @@ namespace PhoneBook.DataLayer.Migrations
 
                     b.HasIndex("ContactId");
 
-                    b.ToTable("Emails");
+                    b.ToTable("Email");
                 });
 
             modelBuilder.Entity("PhoneBook.DataLayer.Entities.PhoneNumber", b =>
@@ -91,7 +94,7 @@ namespace PhoneBook.DataLayer.Migrations
 
                     b.HasIndex("ContactId");
 
-                    b.ToTable("PhoneNumbers");
+                    b.ToTable("PhoneNumber");
                 });
 
             modelBuilder.Entity("PhoneBook.DataLayer.Entities.User", b =>
@@ -133,7 +136,7 @@ namespace PhoneBook.DataLayer.Migrations
                     b.HasOne("PhoneBook.DataLayer.Entities.User", "User")
                         .WithMany("Contacts")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -141,13 +144,13 @@ namespace PhoneBook.DataLayer.Migrations
 
             modelBuilder.Entity("PhoneBook.DataLayer.Entities.Email", b =>
                 {
-                    b.HasOne("PhoneBook.DataLayer.Entities.Contact", "Contact")
+                    b.HasOne("PhoneBook.DataLayer.Entities.Contact", "contact")
                         .WithMany("Emails")
                         .HasForeignKey("ContactId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Contact");
+                    b.Navigation("contact");
                 });
 
             modelBuilder.Entity("PhoneBook.DataLayer.Entities.PhoneNumber", b =>
@@ -155,7 +158,7 @@ namespace PhoneBook.DataLayer.Migrations
                     b.HasOne("PhoneBook.DataLayer.Entities.Contact", "Contact")
                         .WithMany("PhoneNumbers")
                         .HasForeignKey("ContactId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Contact");

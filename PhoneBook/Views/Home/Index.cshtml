@@ -1,9 +1,4 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-
-<div class="container mt-5">
+﻿<div class="container mt-5">
     <h1>Phone Book</h1>
     <div class="input-group mb-3">
         <input type="text" class="form-control" id="searchInput" placeholder="Search in phone book">
@@ -13,17 +8,14 @@
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Phone Number</th>
-                <th>Email</th>
+                <th>Phone Numbers</th>
+                <th>Emails</th>
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
-            
-        </tbody>
+        <tbody></tbody>
     </table>
 </div>
-
 
 <!-- Add Contact Modal -->
 <div id="addContactModal" class="modal fade" tabindex="-1" role="dialog">
@@ -39,15 +31,25 @@
                 <form id="addContactForm">
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" required>
+                        <input type="text" class="form-control" id="name"  placeholder="At least 5 characters" minlength="5" required>
                     </div>
-                    <div class="form-group">
-                        <label for="phone" >Phone Number</label>
-                        <input type="text" class="form-control" id="phone" maxlength="10" pattern="^[1-9]\d{9}$" required>
+                    <div id="phoneNumbersContainer" class="form-group">
+                        <label for="phone">Phone Numbers</label>
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control"  name="phoneNumbers[]" maxlength="10" pattern="^[1-9]\d{9}$" placeholder="Without 0 in start" required>
+                            <div class="input-group-append">
+                                <button type="button" style="margin:0" class="btn btn-success add-phone-btn">+</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" required>
+                    <div id="emailsContainer" class="form-group">
+                        <label for="email">Emails</label>
+                        <div class="input-group mb-2">
+                            <input type="email" class="form-control" name="emails[]" required>
+                            <div class="input-group-append">
+                                <button type="button" style="margin:0" class="btn btn-success add-email-btn">+</button>
+                            </div>
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Add Contact</button>
                 </form>
@@ -55,7 +57,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- Update Contact Modal -->
 <div id="updateContactModal" class="modal fade" tabindex="-1" role="dialog">
@@ -72,17 +73,15 @@
                     <input type="hidden" id="updateId">
                     <div class="form-group">
                         <label for="updateName">Name</label>
-                        <input type="text" class="form-control" id="updateName" required>
+                        <input type="text" class="form-control"  id="updateName" placeholder="At least 5 characters" minlength="5" required>
                     </div>
-                    <div class="form-group">
-                        <label for="updatePhone">Phone Number</label>
-                        <input type="text" class="form-control" id="updatePhone" maxlength="10" pattern="^[1-9]\d{9}$" required>
+                    <div id="updatePhoneNumbersContainer" class="form-group">
+                        <label for="updatePhone">Phone Numbers</label>
                     </div>
-                    <div class="form-group">
-                        <label for="updateEmail">Email</label>
-                        <input type="email" class="form-control" id="updateEmail" required>
+                    <div id="updateEmailsContainer" class="form-group">
+                        <label for="updateEmail">Emails</label>
                     </div>
-                    <button type="submit" class="btn btn-primary">Update Contact</button>
+                    <button type="submit" style="margin:0" class="btn btn-primary">Update Contact</button>
                 </form>
             </div>
         </div>

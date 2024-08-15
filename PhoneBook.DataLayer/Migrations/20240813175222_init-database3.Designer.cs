@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PhoneBook.DataLayer.Context;
 
@@ -11,9 +12,11 @@ using PhoneBook.DataLayer.Context;
 namespace PhoneBook.DataLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240813175222_init-database3")]
+    partial class initdatabase3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,10 +36,18 @@ namespace PhoneBook.DataLayer.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -48,50 +59,6 @@ namespace PhoneBook.DataLayer.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Contacts");
-                });
-
-            modelBuilder.Entity("PhoneBook.DataLayer.Entities.Email", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ContactId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContactId");
-
-                    b.ToTable("Emails");
-                });
-
-            modelBuilder.Entity("PhoneBook.DataLayer.Entities.PhoneNumber", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ContactId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContactId");
-
-                    b.ToTable("PhoneNumbers");
                 });
 
             modelBuilder.Entity("PhoneBook.DataLayer.Entities.User", b =>
@@ -133,39 +100,10 @@ namespace PhoneBook.DataLayer.Migrations
                     b.HasOne("PhoneBook.DataLayer.Entities.User", "User")
                         .WithMany("Contacts")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("PhoneBook.DataLayer.Entities.Email", b =>
-                {
-                    b.HasOne("PhoneBook.DataLayer.Entities.Contact", "Contact")
-                        .WithMany("Emails")
-                        .HasForeignKey("ContactId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Contact");
-                });
-
-            modelBuilder.Entity("PhoneBook.DataLayer.Entities.PhoneNumber", b =>
-                {
-                    b.HasOne("PhoneBook.DataLayer.Entities.Contact", "Contact")
-                        .WithMany("PhoneNumbers")
-                        .HasForeignKey("ContactId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Contact");
-                });
-
-            modelBuilder.Entity("PhoneBook.DataLayer.Entities.Contact", b =>
-                {
-                    b.Navigation("Emails");
-
-                    b.Navigation("PhoneNumbers");
                 });
 
             modelBuilder.Entity("PhoneBook.DataLayer.Entities.User", b =>

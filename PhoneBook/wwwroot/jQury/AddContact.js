@@ -1,50 +1,68 @@
 ﻿$(document).ready(function () {
-
     loadContacts();
+
     $("#addNewContactBtn").click(function () {
         $("#addContactModal").modal('show');
     });
 
+    $("#addNewContactBtn").click(function () {
+        $("#addContactModal").modal('show');
+    });
+    
+    $(document).on('click', '.add-phone-btn', function () {
+        var phoneField = `
+            <div class="input-group mb-2">
+                <input type="text" class="form-control" name="phoneNumbers[]" maxlength="10" pattern="^[1-9]\d{9}$" placeholder="Without 0 in start" required>
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-danger remove-phone-btn">-</button>
+                </div>
+            </div>`;
+        $("#phoneNumbersContainer").append(phoneField);
+    });
+
+    
+    $(document).on('click', '.add-email-btn', function () {
+        var emailField = `
+            <div class="input-group mb-2">
+                <input type="email" class="form-control" name="emails[]" required>
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-danger remove-email-btn">-</button>
+                </div>
+            </div>`;
+        $("#emailsContainer").append(emailField);
+    });
+
+    
+    $(document).on('click', '.remove-phone-btn', function () {
+        $(this).closest('.input-group').remove();
+    });
+
+    
+    $(document).on('click', '.remove-email-btn', function () {
+        $(this).closest('.input-group').remove();
+    });
+
+   
     $("#addContactForm").submit(function (event) {
         event.preventDefault();
-
         var contactData = {
             Name: $("#name").val(),
-            PhoneNumber: $("#phone").val(),
-            Email: $("#email").val()
+            PhoneNumbers: $("input[name='phoneNumbers[]']").map(function () { return this.value; }).get(),
+            Emails: $("input[name='emails[]']").map(function () { return this.value; }).get()
         };
 
         $.ajax({
-            url: '/Contact/CreateAjax', 
+            url: '/Contact/CreateAjax',
             type: 'POST',
             data: JSON.stringify(contactData),
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
             success: function (response) {
                 if (response.success) {
-                    
-                    var newRow = '<tr data-id="' + response.id + '">' +
-                        '<td>' + contactData.Name + '</td>' +
-                        '<td>' + contactData.PhoneNumber + '</td>' +
-                        '<td>' + contactData.Email + '</td>' +
-                        '<td>' +
-                        '<button class="btn btn-primary btn-sm update-btn">Update</button> ' +
-                        '<button class="btn btn-danger btn-sm delete-btn">Delete</button>' +
-                        '</td>' +
-                        '</tr>';
-                    $("#contactTable tbody").append(newRow);
-
-                    
+                    loadContacts();
                     $("#addContactModal").modal('hide');
-
-                    
                     $("#addContactForm")[0].reset();
-
-                    
-                    $(".update-btn").last().click(showUpdateModal);
-                    $(".delete-btn").last().click(deleteContact);
                 } else {
-                    
                     alert(response.message);
                 }
             },
@@ -53,62 +71,68 @@
                 alert("There was an error adding the contact.");
             }
         });
-
-        loadContacts();
     });
 
-    function showUpdateModal() {
-        loadContacts();
+    
+    $(document).on('click', '.update-btn', function () {
         var row = $(this).closest('tr');
         var id = row.data('id');
-        var name = row.find('td:eq(0)').text();
-        var phone = row.find('td:eq(1)').text();
-        var email = row.find('td:eq(2)').text();
-
-        $("#updateId").val(id);
-        $("#updateName").val(name);
-        $("#updatePhone").val(phone);
-        $("#updateEmail").val(email);
-
-        $("#updateContactModal").modal('show');
-    }
-
-    function deleteContact() {
-        var row = $(this).closest('tr');
-        var id = row.data('id');
-
         $.ajax({
-            url: '/Contact/DeleteAjax/' + id, 
-            type: 'DELETE',
-            success: function (response) {
-                if (response.success) {
-                    loadContacts();
-                    row.remove();
-                } else {
-                    
-                    alert(response.message);
-                }
+            url: '/Contact/GetContactByIdAjax/' + id,
+            type: 'GET',
+            dataType: 'json',
+            success: function (contact) {
+                $("#updateId").val(contact.id);
+                $("#updateName").val(contact.name);
+
+                var phoneFields = '';
+                contact.phoneNumbers.forEach(function (phoneNumber) {
+                    phoneFields += `
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control" name="updatePhoneNumbers[]" value="${phoneNumber}" maxlength="10" pattern="^[1-9]\\d{9}$"    placeholder="Without 0 in start">
+                            <div  class="input-group-append">
+                                <button type="button"    class="btn btn-danger remove-phone-btn" style="margin:0">-</button>
+                            </div>
+                        </div>`;
+                });
+                $("#updatePhoneNumbersContainer").html(phoneFields);
+
+                var emailFields = '';
+                contact.emails.forEach(function (email) {
+                    emailFields += `
+                        <div class="input-group mb-2">
+                            <input type="email" class="form-control" name="updateEmails[]" value="${email}" required>
+                            <div class="input-group-append">
+                                <button type="button"   class="btn btn-danger remove-email-btn" style="margin:0">-</button>
+                            </div>
+                        </div>`;
+                });
+                $("#updateEmailsContainer").html(emailFields);
+
+                $("#updateContactModal").modal('show');
+                
             },
             error: function (error) {
                 console.log(error);
-                alert("There was an error deleting the contact.");
+                alert("There was an error fetching the contact.");
             }
         });
-    }
+    });
 
+    
     $("#updateContactForm").submit(function (event) {
-        loadContacts();
         event.preventDefault();
+       
 
         var contactData = {
             Id: $("#updateId").val(),
             Name: $("#updateName").val(),
-            PhoneNumber: $("#updatePhone").val(),
-            Email: $("#updateEmail").val()
+            PhoneNumbers: $("input[name='updatePhoneNumbers[]']").map(function () { return this.value; }).get(),
+            Emails: $("input[name='updateEmails[]']").map(function () { return this.value; }).get()
         };
 
         $.ajax({
-            url: '/Contact/EditAjax', 
+            url: '/Contact/EditAjax',
             type: 'PUT',
             data: JSON.stringify(contactData),
             contentType: 'application/json; charset=utf-8',
@@ -116,15 +140,8 @@
             success: function (response) {
                 if (response.success) {
                     loadContacts();
-                    var row = $("#contactTable tbody").find('tr[data-id="' + contactData.Id + '"]');
-                    row.find('td:eq(0)').text(contactData.Name);
-                    row.find('td:eq(1)').text(contactData.PhoneNumber);
-                    row.find('td:eq(2)').text(contactData.Email);
-
-                    
                     $("#updateContactModal").modal('hide');
                 } else {
-                   
                     alert(response.message);
                 }
             },
@@ -135,33 +152,52 @@
         });
     });
 
+    
+    $(document).on('click', '.delete-btn', function () {
+        var row = $(this).closest('tr');
+        var ID = row.data('id');
+
+        $.ajax({
+            url: '/Contact/DeleteAjax/' + ID,
+            type: 'DELETE',
+            success: function (response) {
+                if (response.success) {
+                    row.remove();
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function (error) {
+                console.log(error);
+                alert("There was an error deleting the contact.");
+            }
+        });
+    });
+
+
+    
     function loadContacts() {
         $.ajax({
             url: '/Contact/GetContacts',
             type: 'GET',
             dataType: 'json',
             success: function (contacts) {
-                var contactList = $('#contactTable tbody'); 
-                contactList.empty(); 
+                var contactList = $('#contactTable tbody');
+                contactList.empty();
 
                 contacts.forEach(function (contact) {
                     var contactRow = `
                     <tr data-id="${contact.id}">
                         <td>${contact.name}</td>
-                        <td>${contact.phoneNumber}</td>
-                        <td>${contact.email}</td>
+                        <td>${contact.phoneNumbers.join(', ')}</td>
+                        <td>${contact.emails.join(', ')}</td>
                         <td>
                             <button class="btn btn-primary update-btn">Update</button>
                             <button class="btn btn-danger delete-btn">Delete</button>
                         </td>
-                    </tr>
-                `;
+                    </tr>`;
                     contactList.append(contactRow);
                 });
-
-                
-                $(".update-btn").click(showUpdateModal);
-                $(".delete-btn").click(deleteContact);
             },
             error: function (error) {
                 console.log(error);
@@ -170,6 +206,7 @@
         });
     }
 
+    
     $('#searchInput').on('keyup', function () {
         var query = $(this).val();
 
@@ -182,26 +219,20 @@
                 data.forEach(function (contact) {
                     rows += '<tr>' +
                         '<td>' + contact.name + '</td>' +
-                        '<td>' + contact.phoneNumber + '</td>' +
-                        '<td>' + contact.email + '</td>' +
+                        '<td>' + contact.phoneNumbers.join(', ') + '</td>' +
+                        '<td>' + contact.emails.join(', ') + '</td>' +
                         '<td>' +
-                        '<button class="btn btn-primary">Update</button> ' +
-                        '<button class="btn btn-danger">Delete</button>' +
+                        '<button class="btn btn-primary update-btn">Update</button> ' +
+                        '<button class="btn btn-danger delete-btn">Delete</button>' +
                         '</td>' +
                         '</tr>';
                 });
                 $('#contactTable tbody').html(rows);
+            },
+            error: function (error) {
+                console.log(error);
+                alert("There was an error searching for contacts.");
             }
         });
     });
-
-   
-    
-    
-    $(".update-btn").click(showUpdateModal);
-    $(".delete-btn").click(deleteContact);
-    loadContacts();
-
-
-    
 });

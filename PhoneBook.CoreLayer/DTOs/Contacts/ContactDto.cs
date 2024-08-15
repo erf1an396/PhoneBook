@@ -1,4 +1,5 @@
 ﻿using PhoneBook.CoreLayer.DTOs.Users;
+using PhoneBook.DataLayer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,23 +14,33 @@ namespace PhoneBook.CoreLayer.DTOs.Contacts
 
         public string  Name { get; set; }
 
-        public string Email { get; set; }
+        
 
         public bool IsDeleted { get; set; }
 
         
-        public string PhoneNumber { get; set; }
-
-        public bool IsValidPhoneNumber()
-        {
-            return PhoneNumber.Length == 10 && PhoneNumber.All(char.IsDigit) ;
-        }
+       
 
         public int UserId { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
         public UserDto User { get; set; }
+
+        public bool IsValidName()
+        {
+            return !string.IsNullOrWhiteSpace(Name) && Name.Length >= 5;
+        }
+
+        public bool IsValidPhoneNumber()
+        {
+            return PhoneNumbers.All(p => p.Length == 10 && p.All(char.IsDigit) && p[0] != '0');
+        }
+
+        
+        public List<string>  PhoneNumbers { get; set; } 
+
+        public List<string> Emails { get; set; } 
 
     }
 }

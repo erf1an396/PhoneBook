@@ -13,10 +13,9 @@ namespace PhoneBook.DataLayer.Entities
         [Key]
         public int Id { get; set; }
         public int UserId { get; set; }
-        public string Name { get; set; }
-        public string PhoneNumber { get; set; }
 
-        public string Email { get; set; }
+        public string Name { get; set; }
+        
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public bool IsDeleted { get; set; }
@@ -24,6 +23,12 @@ namespace PhoneBook.DataLayer.Entities
         #region Relations
         [ForeignKey("UserId")]
         public User User { get; set; }
+
+
+        public ICollection<PhoneNumber> PhoneNumbers { get; set; } = new List<PhoneNumber>();
+        public ICollection<Email> Emails { get; set; } = new List<Email>();
+
+
 
         #endregion
     }

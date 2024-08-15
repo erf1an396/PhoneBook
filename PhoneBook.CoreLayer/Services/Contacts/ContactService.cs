@@ -31,37 +31,43 @@ namespace PhoneBook.CoreLayer.Services.Contacts
         {
             
 
-            return await _context.Contacts
-                .Where(c => c.UserId == userId)
-                .Select(c => new ContactDto
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    PhoneNumber = c.PhoneNumber,
-                    Email = c.Email ,
-                    UserId = c.UserId,
-                    IsDeleted = false , 
-                    CreatedAt = c.CreatedAt,
-           
+            var contact = await _context.Contacts
+                .Include(c => c.PhoneNumbers)
+                .Include(c => c.Emails)
+                .Where(c => c.UserId == userId && c.IsDeleted == false).ToListAsync();
+
+            return contact.Select(c => new ContactDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                UserId = c.UserId,
+                IsDeleted = false,
+                CreatedAt = c.CreatedAt,
+                PhoneNumbers = c.PhoneNumbers.Select(p => p.Number).ToList(),
+                Emails = c.Emails.Select(e => e.Address).ToList(),
+                 
+            });
 
 
-                })
-                .ToListAsync();
         }
 
         public async Task<ContactDto> GetContactByIdAsync(int id)
         {
+
+            var contact =  await _context.Contacts
+                .Include(c => c.PhoneNumbers)
+                .Include(c => c.Emails)
+                .FirstOrDefaultAsync(c  => c.Id == id);
             
 
-            var contact = await _context.Contacts.FindAsync(id);
             if (contact == null) return null;
 
             return new ContactDto
             {
                 Id = contact.Id,
                 Name = contact.Name,
-                PhoneNumber = contact.PhoneNumber,
-                Email = contact.Email,
+                PhoneNumbers = contact.PhoneNumbers.Select(p => p.Number).ToList(),
+                Emails = contact.Emails.Select(e => e.Address).ToList(),
                 UserId = contact.UserId,
                 IsDeleted = false,
                 CreatedAt = contact.CreatedAt,
@@ -70,20 +76,26 @@ namespace PhoneBook.CoreLayer.Services.Contacts
 
         public async Task AddContactAsync(CreateContactDto contactDto , int userId)
         {
-           
-            
-
 
             var contact = new Contact
             {
                 Name = contactDto.Name,
-                PhoneNumber = contactDto.PhoneNumber,
-                Email = contactDto.Email,
-                UserId = userId, 
+                
+                UserId = userId,
                 IsDeleted = false,
                 Id = contactDto.ContactId
 
             };
+
+            foreach (var phoneNumber in contactDto.PhoneNumbers)
+            {
+                contact.PhoneNumbers.Add(new PhoneNumber { Number = phoneNumber });
+            }
+
+            foreach (var email in contactDto.Emails)
+            {
+                contact.Emails.Add(new Email { Address = email });
+            }
 
             _context.Contacts.Add(contact);
             await _context.SaveChangesAsync();
@@ -91,12 +103,28 @@ namespace PhoneBook.CoreLayer.Services.Contacts
 
         public async Task UpdateContactAsync(EditContactDto contactDto)
         {
-            var contact = await _context.Contacts.FindAsync(contactDto.Id);
+            var contact = await _context.Contacts
+            .Include(c => c.PhoneNumbers)
+            .Include(c => c.Emails)
+            .FirstOrDefaultAsync(c => c.Id == contactDto.Id);
+
             if (contact == null) return;
 
+
             contact.Name = contactDto.Name;
-            contact.PhoneNumber = contactDto.PhoneNumber;
-            contact.Email = contactDto.Email;
+
+
+            contact.PhoneNumbers.Clear();
+            foreach (var phoneNumberr in contactDto.PhoneNumbers) 
+            {
+                contact.PhoneNumbers.Add(new PhoneNumber { Number = phoneNumberr });
+            }
+            
+            contact.Emails.Clear();
+            foreach (var email in contactDto.Emails)
+            {
+                contact.Emails.Add(new Email { Address = email });
+            }
 
             _context.Contacts.Update(contact);
             await _context.SaveChangesAsync();
@@ -108,7 +136,10 @@ namespace PhoneBook.CoreLayer.Services.Contacts
             if (contact != null)
             {
                 _context.Contacts.Remove(contact);
+
+
                 await _context.SaveChangesAsync();
+               
             }
         }
 
@@ -141,20 +172,19 @@ namespace PhoneBook.CoreLayer.Services.Contacts
         public IEnumerable<ContactDto> SearchContactsByName(string searchText , int userId  )
         {
 
-           
-                return _context.Contacts
+
+            return _context.Contacts
                     .Where(c => (c.Name.Contains(searchText) || string.IsNullOrEmpty(searchText)) && c.UserId == userId)
                     .Select(c => new ContactDto
                     {
                         Name = c.Name,
-                        PhoneNumber = c.PhoneNumber,
-                        Email = c.Email
+                        PhoneNumbers = c.PhoneNumbers.Select(p => p.Number).ToList(),
+                        Emails = c.Emails.Select(e => e.Address).ToList()
                     }).ToList();
-            
 
-            
-            
-            
+
+
+
         }
 
 

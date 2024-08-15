@@ -16,7 +16,6 @@ namespace PhoneBook.CoreLayer.Services.Contacts
         Task UpdateContactAsync(EditContactDto contactDto);
         Task DeleteContactAsync(int id);
 
-        //Task<IEnumerable<ContactDto>> GetContactByNameAsync(string name,int userId);
 
         IEnumerable<ContactDto> SearchContactsByName(string searchText , int userId);
     }
