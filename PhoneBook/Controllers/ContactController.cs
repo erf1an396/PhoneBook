@@ -7,7 +7,9 @@ using PhoneBook.CoreLayer.DTOs.Users;
 using PhoneBook.CoreLayer.Services.Contacts;
 using PhoneBook.DataLayer.Context;
 using PhoneBook.DataLayer.Entities;
+using System.Data;
 using System.Security.Claims;
+
 
 namespace PhoneBook.Controllers
 {
@@ -48,12 +50,11 @@ namespace PhoneBook.Controllers
             var contact = await _contactService.GetContactByIdAsync(Id);
 
             return Json(contact);
-
         }
 
-
-        [HttpPost]
         
+        [HttpPost]
+        [Authorize(Roles = "AddContact , admin")]
         public async Task<IActionResult> CreateAjax([FromBody] CreateContactDto contactDto)
         {
 
@@ -69,6 +70,7 @@ namespace PhoneBook.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "EditContact  , admin")]
         public async Task<IActionResult> EditAjax([FromBody] EditContactDto contactDto)
         {
             if (ModelState.IsValid && contactDto.IsValidPhoneNumber() && contactDto.IsValidName())
@@ -80,6 +82,7 @@ namespace PhoneBook.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = "DeleteContact  , admin")]
         public async Task<IActionResult> DeleteAjax(int id)
         {
             await _contactService.DeleteContactAsync(id);

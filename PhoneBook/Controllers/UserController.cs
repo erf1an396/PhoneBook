@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using PhoneBook.CoreLayer.DTOs.Users;
 using PhoneBook.CoreLayer.Services.Users;
@@ -18,6 +19,7 @@ namespace PhoneBook.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Index()
         {
             return View();
@@ -38,6 +40,7 @@ namespace PhoneBook.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "UpdateUser  , admin")]
         public async Task<IActionResult> UpdateUser(UserEditDto userEditDto)
         {
             if(ModelState.IsValid)
@@ -49,6 +52,7 @@ namespace PhoneBook.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "DeleteUser  , admin")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             if (!ModelState.IsValid) return BadRequest("Invalid user data.");

@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PhoneBook.CoreLayer.DTOs.Roles;
 using PhoneBook.CoreLayer.Services.Roles;
 
 namespace PhoneBook.Controllers
 {
+    
     public class RoleController : Controller
     {
         public readonly IRoleService _roleService;
@@ -14,6 +16,7 @@ namespace PhoneBook.Controllers
         }
 
         [HttpGet]
+        
         public async Task<IActionResult> Index()
         {
             return View();
@@ -25,6 +28,8 @@ namespace PhoneBook.Controllers
             return Json(role);
         }
 
+        [HttpPost]
+        [Authorize(Roles = "AddRole  , admin")]
         public async Task<IActionResult> AddRole(RoleDto roleDto)
         {
             
@@ -32,6 +37,8 @@ namespace PhoneBook.Controllers
             return Ok();
         }
 
+        [HttpDelete]
+        [Authorize(Roles = "DeleteRole  , admin")]
         public async Task<IActionResult> DeleteRole(int id)
         {
             await _roleService.DeleteRoleAsync(id);
