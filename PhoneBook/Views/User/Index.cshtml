@@ -1,0 +1,64 @@
+﻿@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Users";
+}
+
+<div class="container mt-4">
+    <h2>User Management</h2>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Full Name</th>
+                <th>Roles</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="user-table-body">
+            
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userModalLabel">Edit User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editUserForm">
+                    <input type="hidden" id="UserId" name="UserId">
+                    <div class="mb-3">
+                        <label for="UserName" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="UserName" name="UserName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="FullName" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="FullName" name="FullName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="RolesContainer" class="form-label">Roles</label>
+                        <div id="RolesContainer">
+                            
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveUserButton">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section myscript{
+    <script src="./jQury/AddUser.js"></script>
+
+}

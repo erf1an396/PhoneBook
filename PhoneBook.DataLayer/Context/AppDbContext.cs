@@ -21,6 +21,10 @@ namespace PhoneBook.DataLayer.Context
 
         public DbSet<Email> Emails { get; set; }
 
+        public DbSet<Role> Roles { get; set; }
+
+        public DbSet<UserRole> UserRoles { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,8 +50,20 @@ namespace PhoneBook.DataLayer.Context
             .WithMany(c => c.Emails)
             .HasForeignKey(c => c.ContactId)
             .OnDelete(DeleteBehavior.Cascade);
-            
-            
+
+
+            modelBuilder.Entity<UserRole>()
+                .HasKey(u => new {u.RoleId, u.UserId});
+
+            modelBuilder.Entity<UserRole>()
+            .HasOne(ur => ur.User)
+            .WithMany(u => u.UserRoles)
+            .HasForeignKey(ur => ur.UserId);
+
+            modelBuilder.Entity<UserRole>()
+            .HasOne(ur => ur.Role)
+            .WithMany(r => r.UserRoles)
+            .HasForeignKey(ur => ur.RoleId);
 
 
         }

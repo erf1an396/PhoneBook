@@ -48,9 +48,12 @@ namespace PhoneBook.Controllers
             List<Claim> claims = new List<Claim>() {
                 new Claim("Test","Test"),
                 new Claim(ClaimTypes.NameIdentifier , User.Id.ToString()),
-                new Claim(ClaimTypes.Name , User.UserName)
+                new Claim(ClaimTypes.Name , User.UserName),
+                //new Claim(ClaimTypes.Role , "admin")
 
             };
+            foreach (var role in User.Role)
+                claims.Add(new Claim(ClaimTypes.Role, role));
 
             var Identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var ClaimPrinciple = new ClaimsPrincipal(Identity);
@@ -77,7 +80,7 @@ namespace PhoneBook.Controllers
 
 
         [HttpPost]
-        public IActionResult Register(RegisterViewModel model)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid == false)
                 return View(model);
@@ -90,7 +93,9 @@ namespace PhoneBook.Controllers
             });
 
 
-            if (result.Status == OperationResultStatus.NotFound)
+
+            var resultStatus = await result;
+            if (resultStatus.Status == OperationResultStatus.NotFound)
             {
                 ModelState.AddModelError("UserName", "No information found");
                 return View(model);

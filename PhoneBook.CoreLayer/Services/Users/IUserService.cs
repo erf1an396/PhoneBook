@@ -10,8 +10,11 @@ namespace PhoneBook.CoreLayer.Services.Users
 {
     public interface IUserService
     {
-        OperationResult RegisterUser(UserRegisterDto userRegister);
+        Task <OperationResult> RegisterUser(UserRegisterDto userRegister);
         UserDto LoginUser(UserLoginDto userLogin);
+
+        
+
 
     }
 }

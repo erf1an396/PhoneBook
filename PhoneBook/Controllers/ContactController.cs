@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PhoneBook.CoreLayer.DTOs.Contacts;
@@ -52,6 +53,7 @@ namespace PhoneBook.Controllers
 
 
         [HttpPost]
+        
         public async Task<IActionResult> CreateAjax([FromBody] CreateContactDto contactDto)
         {
 

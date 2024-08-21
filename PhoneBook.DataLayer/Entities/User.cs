@@ -26,16 +26,21 @@ namespace PhoneBook.DataLayer.Entities
         public bool IsDeleted { get; set; }
 
 
-        public UserRole Role { get; set; }
+        //public UserRole Role { get; set; }
 
-        public enum UserRole
-        {
-            Admin,
-            User
-        }
+        //public enum UserRole
+        //{
+        //    Admin,
+        //    User
+        //}
+
+        
+
 
         #region Relations
         public ICollection<Contact> Contacts { get; set; }
+
+        public ICollection<UserRole> UserRoles { get; set; }
 
         #endregion
     }

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using PhoneBook.CoreLayer.Utilities;
 using PhoneBook.DataLayer.Context;
+using PhoneBook.DataLayer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,16 +45,32 @@ namespace PhoneBook.CoreLayer.Services.DbInitializer
             {
                 using (AppDbContext db = serviceScope.ServiceProvider.GetService<AppDbContext>())
                 {
+                    if (!db.Roles.Any())
+                    {
+                        db.Roles.AddRange(
+                            new Role { Name = "admin" },
+                            new Role { Name = "user" }
+                        );
+                        db.SaveChanges();
+                    }
+
                     if (!db.Users.Any())
                     {
-                        db.Users.Add(new DataLayer.Entities.User()
+                        var adminUser = new User
                         {
                             FullName = "admin",
-                            Password = "admin".EncodeToMd5(),
-                            UserName = "admin",
-
-                        });
+                            Password = "admin123".EncodeToMd5(),
+                            UserName = "admin"
+                        };
+                        db.Users.Add(adminUser);
                         db.SaveChanges();
+
+                        var adminRole = db.Roles.FirstOrDefault(r => r.Name == "admin");
+                        if (adminRole != null)
+                        {
+                            db.UserRoles.Add(new UserRole { UserId = adminUser.Id, RoleId = adminRole.Id });
+                            db.SaveChanges();
+                        }
                     }
                 }
             }

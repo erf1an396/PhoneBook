@@ -9,6 +9,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using PhoneBook.CoreLayer.Services.DbInitializer;
+using PhoneBook.CoreLayer.Services.Roles;
+using PhoneBook.CoreLayer.Services.Users.UserShowService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +42,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IUserService , UserService>();
 builder.Services.AddScoped<IContactService, ContactService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IUserShowService, UserShowService>();
 
 builder.Services.AddScoped<IDBInitialize, DBInitialize>();
 
