@@ -73,7 +73,7 @@ namespace PhoneBook.CoreLayer.Services.Users
                 FullName = User.FullName,
                 UserName = User.UserName,
                 Password = User.Password,
-                Role = User.UserRoles.Select(ur => ur.Role.Name).ToList(),
+                Role = User.UserRoles.Select(ur => ur.Role. Name).ToList(),
                 CreatedDate = User.CreatedDate,
                 Id = User.Id
             };
