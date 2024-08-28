@@ -15,6 +15,6 @@ namespace PhoneBook.CoreLayer.DTOs.Users
 
         public string Password { get; set; }
 
-        public List<int> RoleIds { get; set; }
+        public List<string> RoleIds { get; set; }
     }
 }

@@ -9,9 +9,10 @@ namespace PhoneBook.DataLayer.Entities
 {
     public class Email
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
+        
 
-        public int ContactId { get; set; }
+        public string ContactId { get; set; }
 
         public string Address { get; set; }
 

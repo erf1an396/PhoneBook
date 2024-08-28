@@ -5,49 +5,49 @@
         $("#addContactModal").modal('show');
     });
 
-    // Event delegation for Add Phone Number Field in Add Modal
+    
     $(document).on('click', '.add-phone-btn', function () {
         var phoneField = `
             <div class="input-group mb-2">
                 <input type="text" class="form-control" name="phoneNumbers[]" maxlength="10" pattern="^[1-9]\\d{9}$" placeholder="Without 0 in start" required>
                 <div class="input-group-append">
-                    <button type="button" class="btn btn-danger remove-phone-btn">-</button>
+                    <button style="margin:0" type="button" class="btn btn-danger remove-phone-btn">-</button>
                 </div>
             </div>`;
         $("#phoneNumbersContainer").append(phoneField);
     });
 
-    // Event delegation for Add Phone Number Field in Update Modal
+    
     $(document).on('click', '.add-phone-btn', function () {
         var phoneField = `
             <div class="input-group mb-2">
                 <input type="text" class="form-control" name="updatePhoneNumbers[]" maxlength="10" pattern="^[1-9]\\d{9}$" placeholder="Without 0 in start" required>
                 <div class="input-group-append">
-                    <button type="button" class="btn btn-danger remove-phone-btn">-</button>
+                    <button style="margin:0" type="button" class="btn btn-danger remove-phone-btn">-</button>
                 </div>
             </div>`;
         $("#updatePhoneNumbersContainer").append(phoneField);
     });
 
-    // Event delegation for Add Email Field in Add Modal
+    
     $(document).on('click', '.add-email-btn', function () {
         var emailField = `
             <div class="input-group mb-2">
                 <input type="email" class="form-control" name="emails[]" required>
                 <div class="input-group-append">
-                    <button type="button" class="btn btn-danger remove-email-btn">-</button>
+                    <button style="margin:0" type="button" class="btn btn-danger remove-email-btn">-</button>
                 </div>
             </div>`;
         $("#emailsContainer").append(emailField);
     });
 
-    // Event delegation for Add Email Field in Update Modal
+    
     $(document).on('click', '.add-email-btn', function () {
         var emailField = `
             <div class="input-group mb-2">
                 <input type="email" class="form-control" name="updateEmails[]" required>
                 <div class="input-group-append">
-                    <button type="button" class="btn btn-danger remove-email-btn">-</button>
+                    <button style="margin:0" type="button" class="btn btn-danger remove-email-btn">-</button>
                 </div>
             </div>`;
         $("#updateEmailsContainer").append(emailField);
@@ -87,12 +87,13 @@
                     $("#addContactModal").modal('hide');
                     $("#addContactForm")[0].reset();
                 } else {
-                    alert(response.message);
+                    alert("Errors: " + response.errors.join(", "));
                 }
             },
-            error: function (error) {
-                console.log(error);
-                alert("There was an error adding the contact.");
+            error: function (xhr, status, error) {
+                console.error("AJAX Error:", status, error);
+                console.error("Response:", xhr.responseText);
+                alert("There was an error adding the contact. Please check the console for details.");
             }
         });
     });

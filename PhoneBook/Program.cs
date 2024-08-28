@@ -11,6 +11,10 @@ using Microsoft.AspNetCore.Http;
 using PhoneBook.CoreLayer.Services.DbInitializer;
 using PhoneBook.CoreLayer.Services.Roles;
 using PhoneBook.CoreLayer.Services.Users.UserShowService;
+using PhoneBook.CoreLayer.Utilities;
+using PhoneBook.DataLayer.Entities;
+using PhoneBook.CoreLayer.DTOs.Users;
+using PhoneBook.DataLayer.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,24 +25,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default"),
         sqlOptions => sqlOptions.MigrationsAssembly("PhoneBook.DataLayer")));
 
-//builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-//        .AddEntityFrameworkStores<AppDbContext>()
-//        .AddDefaultTokenProviders();
 
 
-//builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
-//{
-//    options.Password.RequireDigit = true;
-//    options.Password.RequiredLength = 6;
-//    options.Password.RequireNonAlphanumeric = false;
-//    options.Password.RequireUppercase = false;
-//    options.Password.RequireLowercase = false;
-//    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-//    options.Lockout.MaxFailedAccessAttempts = 5;
-//    options.User.RequireUniqueEmail = true;
-//})
-// .AddEntityFrameworkStores<AppDbContext>()
-// .AddDefaultTokenProviders();
+
 
 builder.Services.AddScoped<IUserService , UserService>();
 builder.Services.AddScoped<IContactService, ContactService>();
@@ -52,40 +41,62 @@ builder.Services.AddScoped<IDBInitialize, DBInitialize>();
 
 
 
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+    {
+        // User Options
+        //options.User.RequireUniqueEmail = true;
+        //options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+";
+        // Signin Options
+        //options.SignIn.RequireConfirmedEmail = false;
+        //options.SignIn.RequireConfirmedPhoneNumber = true;
+        // Password Options
+        options.Password.RequireUppercase = false;
+        options.Password.RequiredUniqueChars = 0;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireDigit = true;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequiredLength = 8;
+        // LockOut
+        options.Lockout.AllowedForNewUsers = false;
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
+        options.Lockout.MaxFailedAccessAttempts = 3;
+        // Stores Options
+        //options.Stores.MaxLengthForKeys = 10;
+        options.Stores.ProtectPersonalData = false;
 
-//builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
-//{
-//    options.Password.RequireDigit = true;
-//    options.Password.RequiredLength = 6;
-//    options.Password.RequireNonAlphanumeric = false;
-//    options.Password.RequireUppercase = false;
-//    options.Password.RequireLowercase = false;
-//    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-//    options.Lockout.MaxFailedAccessAttempts = 5;
-//    options.User.RequireUniqueEmail = true;
-//})
-//.AddEntityFrameworkStores<AppDbContext>()
-//.AddDefaultTokenProviders();
+        //options.Tokens.AuthenticatorTokenProvider = "";
 
-
+        //options.ClaimsIdentity.UserNameClaimType = "ClaimTypes.Name";
+    })
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders()
+.AddErrorDescriber<PersianIdentityErrors>();
 
 //builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 //        .AddEntityFrameworkStores<AppDbContext>()
 //        .AddDefaultTokenProviders();
 
 
-
-builder.Services.AddAuthentication(option =>
+builder.Services.ConfigureApplicationCookie(options =>
 {
-    option.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    option.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    option.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-}).AddCookie(option =>
-{
-    option.LoginPath = "/auth/login";
-    option.LogoutPath = "/Auth/Logout";
-    option.ExpireTimeSpan = TimeSpan.FromDays(30);
+    options.AccessDeniedPath = "/Account/AccessDenied";
+    options.LoginPath = "/Auth/Login";
+    options.LogoutPath = "/Auth/LogOut";
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromDays(3);
 });
+
+//builder.Services.AddAuthentication(option =>
+//{
+//    option.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+//    option.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+//    option.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+//}).AddCookie(option =>
+//{
+//    option.LoginPath = "/auth/login";
+//    option.LogoutPath = "/Auth/Logout";
+//    option.ExpireTimeSpan = TimeSpan.FromDays(30);
+//});
 
 
 var app = builder.Build();
@@ -106,7 +117,12 @@ app.UseStaticFiles();
 app.UseRouting();
 
 
+
+app.UseAuthentication();
+
 app.UseAuthorization();
+
+
 
 
 

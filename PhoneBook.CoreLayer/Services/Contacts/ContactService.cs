@@ -27,7 +27,7 @@ namespace PhoneBook.CoreLayer.Services.Contacts
 
         
 
-        public async Task<IEnumerable<ContactDto>> GetContactsAsync(int userId)
+        public async Task<IEnumerable<ContactDto>> GetContactsAsync(string userId)
         {
             
 
@@ -51,7 +51,7 @@ namespace PhoneBook.CoreLayer.Services.Contacts
 
         }
 
-        public async Task<ContactDto> GetContactByIdAsync(int id)
+        public async Task<ContactDto> GetContactByIdAsync(string id)
         {
 
             var contact =  await _context.Contacts
@@ -74,7 +74,7 @@ namespace PhoneBook.CoreLayer.Services.Contacts
             };
         }
 
-        public async Task AddContactAsync(CreateContactDto contactDto , int userId)
+        public async Task AddContactAsync(CreateContactDto contactDto , string userId)
         {
 
             var contact = new Contact
@@ -83,18 +83,24 @@ namespace PhoneBook.CoreLayer.Services.Contacts
                 
                 UserId = userId,
                 IsDeleted = false,
-                Id = contactDto.ContactId
+                Id = string.IsNullOrEmpty(contactDto.ContactId) ? Guid.NewGuid().ToString() : contactDto.ContactId
 
             };
 
-            foreach (var phoneNumber in contactDto.PhoneNumbers)
+            if (contactDto.PhoneNumbers != null)
             {
-                contact.PhoneNumbers.Add(new PhoneNumber { Number = phoneNumber });
+                foreach (var phoneNumber in contactDto.PhoneNumbers)
+                {
+                    contact.PhoneNumbers.Add(new PhoneNumber { Number = phoneNumber });
+                }
             }
 
-            foreach (var email in contactDto.Emails)
+            if (contactDto.Emails != null)
             {
-                contact.Emails.Add(new Email { Address = email });
+                foreach (var email in contactDto.Emails)
+                {
+                    contact.Emails.Add(new Email { Address = email });
+                }
             }
 
             _context.Contacts.Add(contact);
@@ -130,7 +136,7 @@ namespace PhoneBook.CoreLayer.Services.Contacts
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteContactAsync(int id)
+        public async Task DeleteContactAsync(string id)
         {
             var contact = await _context.Contacts.FindAsync(id);
             if (contact != null)
@@ -169,7 +175,7 @@ namespace PhoneBook.CoreLayer.Services.Contacts
 
         //}
 
-        public IEnumerable<ContactDto> SearchContactsByName(string searchText , int userId  )
+        public IEnumerable<ContactDto> SearchContactsByName(string searchText , string userId  )
         {
 
 

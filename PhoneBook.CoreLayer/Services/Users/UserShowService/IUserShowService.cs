@@ -10,10 +10,10 @@ namespace PhoneBook.CoreLayer.Services.Users.UserShowService
     public interface IUserShowService
     {
         Task<IEnumerable<UserDto>> GetAllUsersAsync();
-        Task DeleteUserAsync(int id);
+        Task DeleteUserAsync(string id);
 
         Task UpdateUserAsync(UserEditDto userEditDto);
 
-        Task<UserDto> GetUserByIdAsync(int id);
+        Task<UserDto> GetUserByIdAsync(string id);
     }
 }

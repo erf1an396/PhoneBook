@@ -9,75 +9,79 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System.Data;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace PhoneBook.CoreLayer.Services.Users
 {
     public class UserService : IUserService
     {
 
-        private readonly AppDbContext _appDbContext;
+        
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public UserService(AppDbContext appDbContext)
+        public UserService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, SignInManager<ApplicationUser> signInManager)
         {
-            _appDbContext = appDbContext;
+            _userManager  = userManager;
+            _roleManager = roleManager;
+            _signInManager = signInManager;
+            
         }
 
-       
 
-        public async Task <OperationResult> RegisterUser(UserRegisterDto userRegisterDto)
+
+        public async Task<IdentityResult> RegisterUserAsync(UserRegisterDto userRegisterDto)
         {
-            var isUserNameExist = _appDbContext.Users.Any(u => u.UserName == userRegisterDto.UserName);
-            if (isUserNameExist)
-                return OperationResult.Error("نام کاربری تکراری است ");
+            var existingUser = await _userManager.FindByNameAsync(userRegisterDto.UserName);
+            if (existingUser != null)
+                return IdentityResult.Failed(new IdentityError { Description = "نام کاربری تکراری است" });
 
-
-            var passwordHash = userRegisterDto.Password.EncodeToMd5();
-            var user = new User
+            var user = new ApplicationUser
             {
                 FullName = userRegisterDto.FullName,
                 UserName = userRegisterDto.UserName,
                 IsDeleted = false,
-                CreatedDate = DateTime.Now,
-                Password = passwordHash,
-                UserRoles = new List<UserRole>()
+                CreatedDate = DateTime.Now
             };
 
-            _appDbContext.Users.Add(user);
-            await _appDbContext.SaveChangesAsync();
+            var result = await _userManager.CreateAsync(user, userRegisterDto.Password);
+            if (!result.Succeeded)
+                return result;
 
-            var userRole = await _appDbContext.Roles.FirstOrDefaultAsync(r => r.Name == "user");
+
+            var userRole = await _roleManager.FindByNameAsync("user");
             if (userRole != null)
             {
-                _appDbContext.UserRoles.Add(new UserRole { UserId = user.Id, RoleId = userRole.Id });
-                await _appDbContext.SaveChangesAsync();
+                var roleResult = await _userManager.AddToRoleAsync(user, userRole.Name);
+                if (!roleResult.Succeeded)
+                    return roleResult;
             }
 
-
-            return OperationResult.Success();
+            return IdentityResult.Success;
         }
 
-
-        public UserDto LoginUser(UserLoginDto userLoginDto)
+        public async Task<UserDto> LoginUserAsync(UserLoginDto userLoginDto)
         {
-            var PasswordHash = userLoginDto.Password.EncodeToMd5();
-            var User = _appDbContext.Users
-                 .Include(u => u.UserRoles) 
-                  .ThenInclude(ur => ur.Role) 
-                   .FirstOrDefault(u => u.UserName == userLoginDto.UserName && u.Password == PasswordHash);
 
-            if (User == null)
-                return null;
-
-            var UserDto = new UserDto()
+            var result = await _signInManager.PasswordSignInAsync(userLoginDto.UserName, userLoginDto.Password, true, false);
+            if (result.Succeeded)
             {
-                FullName = User.FullName,
-                UserName = User.UserName,
-                Password = User.Password,
-                Role = User.UserRoles.Select(ur => ur.Role. Name).ToList(),
-                CreatedDate = User.CreatedDate,
-                Id = User.Id
-            };
-            return UserDto;
+                var user = await _userManager.FindByNameAsync(userLoginDto.UserName);
+
+                return new UserDto
+                {
+                    FullName = user.FullName,
+                    UserName = user.UserName,
+                    //Role = roles.ToList(),
+                    CreatedDate = user.CreatedDate,
+                    Id = user.Id
+                };
+            }
+
+            return null;
 
 
         }

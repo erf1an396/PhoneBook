@@ -5,13 +5,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace PhoneBook.CoreLayer.Services.Users
 {
     public interface IUserService
     {
-        Task <OperationResult> RegisterUser(UserRegisterDto userRegister);
-        UserDto LoginUser(UserLoginDto userLogin);
+        Task <IdentityResult> RegisterUserAsync(UserRegisterDto userRegister);
+        Task <UserDto> LoginUserAsync(UserLoginDto userLogin);
 
         
 

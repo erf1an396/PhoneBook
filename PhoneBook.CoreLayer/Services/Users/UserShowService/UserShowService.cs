@@ -7,43 +7,44 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace PhoneBook.CoreLayer.Services.Users.UserShowService
 {
     public class UserShowService: IUserShowService
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<ApplicationRole>  _roleManager;
 
-        public UserShowService(AppDbContext appDbContext)
+        public UserShowService(UserManager<ApplicationUser> userManager , RoleManager<ApplicationRole> roleManager)
         {
-            _appDbContext = appDbContext;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
         public async Task UpdateUserAsync(UserEditDto userEditDto)
         {
-            var user = await _appDbContext.Users
-            .Include(u => u.UserRoles)
-            .ThenInclude(u => u.Role)
-            .FirstOrDefaultAsync(u => u.Id == userEditDto.Id);
-
-            if (user == null) return;
+            var user = await _userManager.FindByIdAsync(userEditDto.Id);
+            if (user == null)
+                return;
 
             user.UserName = userEditDto.UserName;
             user.FullName = userEditDto.FullName;
 
-            user.UserRoles.Clear();
+            
+            var currentRoles = await _userManager.GetRolesAsync(user);
 
-
-            foreach (var roleId in userEditDto.RoleIds)
+            if (currentRoles.Any())
             {
-                var role = await _appDbContext.Roles.FindAsync(roleId);
-                if (role != null)
-                {
-                    user.UserRoles.Add(new UserRole { UserId = user.Id, RoleId = role.Id });
-                }
+                await _userManager.RemoveFromRolesAsync(user, currentRoles);
             }
 
-            _appDbContext.Users.Update(user);
-            await _appDbContext.SaveChangesAsync();
+            foreach (var roleItem in userEditDto.RoleIds)
+            {
+               var role = await _roleManager.FindByIdAsync(roleItem);
+               if(role == null) continue;
+               var t = await _userManager.AddToRoleAsync(user, role.Name);
+            }
+            
 
             //var roles = await _appDbContext.Roles
             //    .Where(r => userEditDto.RoleIds.Contains(r.Id))
@@ -58,14 +59,12 @@ namespace PhoneBook.CoreLayer.Services.Users.UserShowService
 
         }
 
-        public async Task DeleteUserAsync(int id)
+        public async Task DeleteUserAsync(string id)
         {
-            var user = await _appDbContext.Users.FindAsync(id);
+            var user = await _userManager.FindByIdAsync(id);
             if (user != null)
             {
-                _appDbContext.Users.Remove(user);
-
-                await _appDbContext.SaveChangesAsync();
+                await _userManager.DeleteAsync(user);
             }
 
         }
@@ -74,29 +73,29 @@ namespace PhoneBook.CoreLayer.Services.Users.UserShowService
         {
 
 
-            var users = await _appDbContext.Users
-            .Include(u => u.UserRoles)
-            .ThenInclude(ur => ur.Role)
-            .Select(u => new UserDto
-        {
-            Id = u.Id,
-            UserName = u.UserName,
-            FullName = u.FullName,
-            CreatedDate = u.CreatedDate,
-            Role = u.UserRoles.Select(ur => ur.Role.Name).ToList()
-            })
-        .ToListAsync();
+            var users = await _userManager.Users
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+                .Select(u => new UserDto
+                {
+                    Id = u.Id,
+                    UserName = u.UserName,
+                    FullName = u.FullName,
+                    CreatedDate = u.CreatedDate,
+                    Role = u.UserRoles.Select(ur => ur.Role.Name).ToList()
+                })
+                .ToListAsync();
 
             return users;
 
         }
 
-        public async Task<UserDto> GetUserByIdAsync(int id)
+        public async Task<UserDto> GetUserByIdAsync(string id)
         {
-            var user = await _appDbContext.Users
-            .Include(u => u.UserRoles)
-            .ThenInclude(ur => ur.Role)
-            .FirstOrDefaultAsync(u => u.Id == id);
+            var user = await _userManager.Users
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+                .FirstOrDefaultAsync(u => u.Id == id);
 
             if (user == null) return null;
 
@@ -106,7 +105,7 @@ namespace PhoneBook.CoreLayer.Services.Users.UserShowService
                 UserName = user.UserName,
                 FullName = user.FullName,
                 CreatedDate = user.CreatedDate,
-                Role = user.UserRoles.Select(ur => ur.Role.Name).ToList() 
+                Role = user.UserRoles.Select(ur => ur.Role.Name).ToList()
             };
         }
     }

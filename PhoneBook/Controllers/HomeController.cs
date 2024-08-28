@@ -6,7 +6,7 @@ using System.Diagnostics;
 namespace PhoneBook.Controllers
 {
 
-    
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -15,6 +15,8 @@ namespace PhoneBook.Controllers
         {
             _logger = logger;
         }
+
+        
 
         public IActionResult Index()
         {

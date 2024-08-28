@@ -19,7 +19,7 @@ namespace PhoneBook.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "admin")]
+        
         public async Task<IActionResult> Index()
         {
             return View();
@@ -33,14 +33,14 @@ namespace PhoneBook.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUserById(int id)
+        public async Task<IActionResult> GetUserById(string id)
         {
             var user = await _userShowService.GetUserByIdAsync(id);
             return Json(user);
         }
 
         [HttpPost]
-        [Authorize(Roles = "UpdateUser  , admin")]
+        
         public async Task<IActionResult> UpdateUser(UserEditDto userEditDto)
         {
             if(ModelState.IsValid)
@@ -52,8 +52,8 @@ namespace PhoneBook.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "DeleteUser  , admin")]
-        public async Task<IActionResult> DeleteUser(int id)
+        
+        public async Task<IActionResult> DeleteUser(string id)
         {
             if (!ModelState.IsValid) return BadRequest("Invalid user data.");
 

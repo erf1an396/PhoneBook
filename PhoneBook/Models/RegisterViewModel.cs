@@ -18,5 +18,6 @@ namespace PhoneBook.Models
         [Display(Name = "Password ")]
         [MinLength(6, ErrorMessage = "{0} should more than 5 character")]
         public string FullName { get; set; }
+
     }
 }

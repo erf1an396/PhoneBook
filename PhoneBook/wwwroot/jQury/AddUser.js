@@ -87,8 +87,9 @@
     $('#saveUserButton').click(function () {
         var roleIds = [];
         $('#RolesContainer input:checked').each(function () {
-            roleIds.push(parseInt( $(this).val()));
+            roleIds.push( $(this).val());
         });
+        console.log(roleIds);
 
         var userData = {
             Id: $('#UserId').val(),

@@ -9,11 +9,11 @@ namespace PhoneBook.DataLayer.Entities
 {
     public  class PhoneNumber
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string Number {  get; set; }
 
-        public int ContactId { get; set; }
+        public string ContactId { get; set; }
 
 
         [ForeignKey("ContactId")]

@@ -8,109 +8,98 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using PhoneBook.DataLayer.Entities;
+using Microsoft.AspNetCore.Identity;
+using PhoneBook.DataLayer.Migrations;
 
 namespace PhoneBook.Controllers
 {
     public class AuthController : Controller
     {
         private readonly IUserService _userService;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AuthController(IUserService userService)
+
+        public AuthController(IUserService userService , SignInManager<ApplicationUser> signInManager , UserManager<ApplicationUser> userManager)
         {
             _userService = userService;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         [HttpGet]
         public IActionResult Login()
         {
+            
             return View();
         }
 
         [HttpPost]
-        public IActionResult Login(LoginViewModel model)
+        public async Task<IActionResult> Login( LoginViewModel model )
         {
-            if (ModelState.IsValid == false)
-                return View(model);
+            
 
-            var User = _userService.LoginUser(new UserLoginDto()
-            {
-                UserName = model.UserName,
-                Password = model.Password
-            });
+            if (!ModelState.IsValid) return View(model);
 
-            if(User == null)
-            {
-                ModelState.AddModelError("UserName", "No information found");
-                return View(model);
-            }
+            
 
-            #region Claim
-            List<Claim> claims = new List<Claim>() {
-                new Claim("Test","Test"),
-                new Claim(ClaimTypes.NameIdentifier , User.Id.ToString()),
-                new Claim(ClaimTypes.Name , User.UserName),
-                //new Claim(ClaimTypes.Role , "admin")
+            var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, true, false);
 
-            };
-            foreach (var role in User.Role)
-                claims.Add(new Claim(ClaimTypes.Role, role));
 
-            var Identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var ClaimPrinciple = new ClaimsPrincipal(Identity);
-            var Properties = new AuthenticationProperties()
-            {
-                IsPersistent = true,
-            };
-            HttpContext.SignInAsync(ClaimPrinciple, Properties);
+            
             return RedirectToAction("Index", "Home");
-
-            #endregion
-
+            
+            
         }
-
 
         [HttpGet]
         public IActionResult Register()
         {
-
             return View();
         }
-
-
-
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (ModelState.IsValid == false)
+            if (!ModelState.IsValid)
                 return View(model);
 
-            var result = _userService.RegisterUser(new UserRegisterDto()
+            var result = await _userService.RegisterUserAsync(new UserRegisterDto
             {
                 UserName = model.UserName,
                 FullName = model.FullName,
                 Password = model.Password
             });
 
-
-
-            var resultStatus = await result;
-            if (resultStatus.Status == OperationResultStatus.NotFound)
+            if (!result.Succeeded)
             {
-                ModelState.AddModelError("UserName", "No information found");
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
                 return View(model);
             }
 
-
-
-            return RedirectToAction("Login", "Auth");
-
-            
-
+            //return View(model);
+            else
+            {
+                return RedirectToAction("Login", "Auth");
+            }
 
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LogOut()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Login", "Auth");
+        }
 
-    
+    }
+
+
+
+
 }
-}
+

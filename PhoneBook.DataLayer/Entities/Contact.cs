@@ -11,8 +11,9 @@ namespace PhoneBook.DataLayer.Entities
     public  class Contact
     {
         [Key]
-        public int Id { get; set; }
-        public int UserId { get; set; }
+        public string Id { get; set; }
+        
+        public string UserId { get; set; }
 
         public string Name { get; set; }
         
@@ -22,7 +23,7 @@ namespace PhoneBook.DataLayer.Entities
 
         #region Relations
         [ForeignKey("UserId")]
-        public User User { get; set; }
+        public ApplicationUser User { get; set; }
 
 
         public ICollection<PhoneNumber> PhoneNumbers { get; set; } = new List<PhoneNumber>();

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace PhoneBook.CoreLayer.Services.Roles
 {
@@ -11,9 +12,9 @@ namespace PhoneBook.CoreLayer.Services.Roles
     {
         Task<IEnumerable<RoleDto>> GetAllRolesAsync();
 
-        Task AddRoleAsync(RoleDto roleDto);
+        Task<IdentityResult> AddRoleAsync(RoleDto roleDto);
 
-        Task DeleteRoleAsync(int id);
+        Task<IdentityResult> DeleteRoleAsync(string id);
 
 
     }

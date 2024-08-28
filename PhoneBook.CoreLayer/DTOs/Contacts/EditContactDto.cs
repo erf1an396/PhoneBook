@@ -8,7 +8,7 @@ namespace PhoneBook.CoreLayer.DTOs.Contacts
 {
     public class EditContactDto
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string Name { get; set; }
 

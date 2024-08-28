@@ -7,48 +7,53 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 
 namespace PhoneBook.CoreLayer.Services.Roles
 {
     public class RoleService : IRoleService
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly RoleManager<ApplicationRole> _roleManger;
 
-        public RoleService(AppDbContext appDbContext)
+        public RoleService(RoleManager<ApplicationRole> roleManager)
         {
-            _appDbContext = appDbContext;
+            _roleManger = roleManager;
         }
 
         public async Task<IEnumerable<RoleDto>> GetAllRolesAsync()
         {
-            return await _appDbContext.Roles
-                .Select(r => new RoleDto
-                {
-                    Id = r.Id,
-                    Name = r.Name,  
+            var roles = _roleManger.Roles.Select(r => new RoleDto
+            {
+                Id = r.Id,
+                Name = r.Name
+            });
 
-                }).ToListAsync();
+            return await Task.FromResult(roles.ToList());
         }
 
-        public async Task AddRoleAsync(RoleDto roleDto)
+        public async Task<IdentityResult> AddRoleAsync(RoleDto roleDto)
         {
-            var role = new Role
+            var role = new ApplicationRole
             {
                 Name = roleDto.Name
             };
-            _appDbContext.Roles.Add(role);
-            await _appDbContext.SaveChangesAsync();
+
+            return await _roleManger.CreateAsync(role);
         }
 
-        public async Task DeleteRoleAsync(int id)
+        public async Task<IdentityResult> DeleteRoleAsync(string id)
         {
-            var role = await _appDbContext.Roles.FindAsync(id);  
+            var role = await _roleManger.FindByIdAsync(id);
             if(role != null)
             {
-                _appDbContext.Roles.Remove(role);
-                await _appDbContext.SaveChangesAsync();
+                return await _roleManger.DeleteAsync(role);
             }
+
+            return IdentityResult.Failed(new IdentityError
+            {
+                Description = $"Role with ID {id} not found."
+            });
         }
     }
 }

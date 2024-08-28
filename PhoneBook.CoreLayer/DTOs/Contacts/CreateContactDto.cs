@@ -11,7 +11,9 @@ namespace PhoneBook.CoreLayer.DTOs.Contacts
     public class CreateContactDto
     {
 
-        public int ContactId { get; set; }
+        
+        public string UserId { get; set; }
+        public string? ContactId { get; set; }
 
         public string Name { get; set; }
 
@@ -26,7 +28,7 @@ namespace PhoneBook.CoreLayer.DTOs.Contacts
             return PhoneNumbers.All(p => p.Length == 10 && p[0] != '0' && p.All(char.IsDigit));
         }
 
-        public int UserId { get; set; }
+        
 
 
         public List<string> PhoneNumbers { get; set; } = new List<string>();

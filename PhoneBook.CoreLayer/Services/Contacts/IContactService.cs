@@ -10,13 +10,13 @@ namespace PhoneBook.CoreLayer.Services.Contacts
 {
     public interface IContactService
     {
-        Task<IEnumerable<ContactDto>> GetContactsAsync(int userId);
-        Task<ContactDto> GetContactByIdAsync(int id);
-        Task AddContactAsync(CreateContactDto contactDto , int userId);
+        Task<IEnumerable<ContactDto>> GetContactsAsync(string userId);
+        Task<ContactDto> GetContactByIdAsync(string id);
+        Task AddContactAsync(CreateContactDto contactDto , string userId);
         Task UpdateContactAsync(EditContactDto contactDto);
-        Task DeleteContactAsync(int id);
+        Task DeleteContactAsync(string id);
 
 
-        IEnumerable<ContactDto> SearchContactsByName(string searchText , int userId);
+        IEnumerable<ContactDto> SearchContactsByName(string searchText , string userId);
     }
 }

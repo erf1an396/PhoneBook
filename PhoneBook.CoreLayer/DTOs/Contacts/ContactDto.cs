@@ -10,7 +10,7 @@ namespace PhoneBook.CoreLayer.DTOs.Contacts
 {
     public class ContactDto
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string  Name { get; set; }
 
@@ -21,7 +21,7 @@ namespace PhoneBook.CoreLayer.DTOs.Contacts
         
        
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

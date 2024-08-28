@@ -5,14 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static PhoneBook.DataLayer.Entities.User;
+using static PhoneBook.DataLayer.Entities.ApplicationUser;
 
 namespace PhoneBook.CoreLayer.DTOs.Users
 {
     public class UserDto
     {
 
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         
         public string UserName { get; set; }
