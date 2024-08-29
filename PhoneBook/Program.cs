@@ -98,11 +98,20 @@ builder.Services.ConfigureApplicationCookie(options =>
 //    option.ExpireTimeSpan = TimeSpan.FromDays(30);
 //});
 
-//builder.Services.AddAuthorization(option =>
-//{
-//    option.AddPolicy("Admin", policy =>
-//        policy.RequireRole("admin"));
-//});
+builder.Services.AddAuthorization(option =>
+{
+    option.AddPolicy("Admin", policy => policy.RequireRole("admin"));
+    option.AddPolicy("User", policy => policy.RequireRole("user"));
+    option.AddPolicy("Writer", policy => policy.RequireRole("writer"));
+    option.AddPolicy("AddContact", policy => policy.RequireRole("AddContact"));
+    option.AddPolicy("UpdateContact", policy => policy.RequireRole("DeleteContact"));
+    option.AddPolicy("Product", policy => policy.RequireRole("Product"));
+    option.AddPolicy("AddRole", policy => policy.RequireRole("AddRole"));
+    option.AddPolicy("DeleteRole", policy => policy.RequireRole("DeleteRole"));
+    option.AddPolicy("DeleteUser", policy => policy.RequireRole("DeleteUser"));
+    option.AddPolicy("UpdateUser", policy => policy.RequireRole("UpdateUser"));
+
+});
 
 
 var app = builder.Build();
