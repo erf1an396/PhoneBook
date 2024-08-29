@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -9,10 +10,11 @@ namespace PhoneBook.DataLayer.Entities
 {
     public class Email
     {
-        public string Id { get; set; }
+        [Key]
+        public int Id { get; set; }
         
 
-        public string ContactId { get; set; }
+        public int ContactId { get; set; }
 
         public string Address { get; set; }
 

@@ -78,7 +78,7 @@ namespace PhoneBook.CoreLayer.Services.Users.UserShowService
                 .ThenInclude(ur => ur.Role)
                 .Select(u => new UserDto
                 {
-                    Id = u.Id,
+                    Id = u.Id.ToString(),
                     UserName = u.UserName,
                     FullName = u.FullName,
                     CreatedDate = u.CreatedDate,
@@ -95,13 +95,13 @@ namespace PhoneBook.CoreLayer.Services.Users.UserShowService
             var user = await _userManager.Users
                 .Include(u => u.UserRoles)
                 .ThenInclude(ur => ur.Role)
-                .FirstOrDefaultAsync(u => u.Id == id);
+                .FirstOrDefaultAsync(u => u.Id == Guid.Parse(id));
 
             if (user == null) return null;
 
             return new UserDto
             {
-                Id = user.Id,
+                Id =user.Id.ToString() ,
                 UserName = user.UserName,
                 FullName = user.FullName,
                 CreatedDate = user.CreatedDate,

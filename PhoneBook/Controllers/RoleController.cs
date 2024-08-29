@@ -16,7 +16,7 @@ namespace PhoneBook.Controllers
         }
 
         [HttpGet]
-        
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Index()
         {
             return View();
@@ -29,7 +29,7 @@ namespace PhoneBook.Controllers
         }
 
         [HttpPost]
-        
+        [Authorize(Roles = "AddRole , admin")]
         public async Task<IActionResult> AddRole(RoleDto roleDto)
         {
             
@@ -37,8 +37,8 @@ namespace PhoneBook.Controllers
             return Ok();
         }
 
-        [HttpDelete]
-        
+        [Authorize(Roles = "DeleteRole")]
+        [HttpPost]
         public async Task<IActionResult> DeleteRole(string id)
         {
             await _roleService.DeleteRoleAsync(id);

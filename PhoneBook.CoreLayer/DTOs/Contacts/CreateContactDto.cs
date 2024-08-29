@@ -12,7 +12,7 @@ namespace PhoneBook.CoreLayer.DTOs.Contacts
     {
 
         
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
         public string? ContactId { get; set; }
 
         public string Name { get; set; }

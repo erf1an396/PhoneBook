@@ -34,13 +34,13 @@ namespace PhoneBook.CoreLayer.Services.Contacts
             var contact = await _context.Contacts
                 .Include(c => c.PhoneNumbers)
                 .Include(c => c.Emails)
-                .Where(c => c.UserId == userId && c.IsDeleted == false).ToListAsync();
+                .Where(c => c.UserId == Guid.Parse(userId) && c.IsDeleted == false).ToListAsync();
 
             return contact.Select(c => new ContactDto
             {
-                Id = c.Id,
+                Id = (c.Id).ToString() ,
                 Name = c.Name,
-                UserId = c.UserId,
+                UserId = c.UserId .ToString(),
                 IsDeleted = false,
                 CreatedAt = c.CreatedAt,
                 PhoneNumbers = c.PhoneNumbers.Select(p => p.Number).ToList(),
@@ -57,18 +57,18 @@ namespace PhoneBook.CoreLayer.Services.Contacts
             var contact =  await _context.Contacts
                 .Include(c => c.PhoneNumbers)
                 .Include(c => c.Emails)
-                .FirstOrDefaultAsync(c  => c.Id == id);
+                .FirstOrDefaultAsync(c  => c.Id == int.Parse(id));
             
 
             if (contact == null) return null;
 
             return new ContactDto
             {
-                Id = contact.Id,
+                Id = contact.Id .ToString(),
                 Name = contact.Name,
                 PhoneNumbers = contact.PhoneNumbers.Select(p => p.Number).ToList(),
                 Emails = contact.Emails.Select(e => e.Address).ToList(),
-                UserId = contact.UserId,
+                UserId = contact.UserId.ToString(),
                 IsDeleted = false,
                 CreatedAt = contact.CreatedAt,
             };
@@ -81,9 +81,8 @@ namespace PhoneBook.CoreLayer.Services.Contacts
             {
                 Name = contactDto.Name,
                 
-                UserId = userId,
+                UserId = Guid.Parse( userId),
                 IsDeleted = false,
-                Id = string.IsNullOrEmpty(contactDto.ContactId) ? Guid.NewGuid().ToString() : contactDto.ContactId
 
             };
 
@@ -112,7 +111,7 @@ namespace PhoneBook.CoreLayer.Services.Contacts
             var contact = await _context.Contacts
             .Include(c => c.PhoneNumbers)
             .Include(c => c.Emails)
-            .FirstOrDefaultAsync(c => c.Id == contactDto.Id);
+            .FirstOrDefaultAsync(c => c.Id == int.Parse(contactDto.Id));
 
             if (contact == null) return;
 
@@ -180,7 +179,7 @@ namespace PhoneBook.CoreLayer.Services.Contacts
 
 
             return _context.Contacts
-                    .Where(c => (c.Name.Contains(searchText) || string.IsNullOrEmpty(searchText)) && c.UserId == userId)
+                    .Where(c => (c.Name.Contains(searchText) || string.IsNullOrEmpty(searchText)) && c.UserId == Guid.Parse(userId))
                     .Select(c => new ContactDto
                     {
                         Name = c.Name,

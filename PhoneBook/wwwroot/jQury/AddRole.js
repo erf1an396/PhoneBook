@@ -33,6 +33,12 @@
         }
     });
 
+
+    
+
+
+
+
     $('#role-table-body').on('click', '.btn-delete-role', function () {
         var roleId = $(this).data('id');
         $.ajax({
@@ -42,9 +48,9 @@
             success: function () {
                 loadRoles();
             },
-            //error: function () {
-            //    alert("Error deleting role.");
-            //}
+            error: function () {
+                alert("Error deleting role.");
+            }
         });
     });
 });

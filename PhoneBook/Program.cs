@@ -14,7 +14,7 @@ using PhoneBook.CoreLayer.Services.Users.UserShowService;
 using PhoneBook.CoreLayer.Utilities;
 using PhoneBook.DataLayer.Entities;
 using PhoneBook.CoreLayer.DTOs.Users;
-using PhoneBook.DataLayer.Migrations;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,9 +72,8 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
     .AddDefaultTokenProviders()
 .AddErrorDescriber<PersianIdentityErrors>();
 
-//builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-//        .AddEntityFrameworkStores<AppDbContext>()
-//        .AddDefaultTokenProviders();
+
+
 
 
 builder.Services.ConfigureApplicationCookie(options =>
@@ -86,6 +85,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.ExpireTimeSpan = TimeSpan.FromDays(3);
 });
 
+
 //builder.Services.AddAuthentication(option =>
 //{
 //    option.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -96,6 +96,12 @@ builder.Services.ConfigureApplicationCookie(options =>
 //    option.LoginPath = "/auth/login";
 //    option.LogoutPath = "/Auth/Logout";
 //    option.ExpireTimeSpan = TimeSpan.FromDays(30);
+//});
+
+//builder.Services.AddAuthorization(option =>
+//{
+//    option.AddPolicy("Admin", policy =>
+//        policy.RequireRole("admin"));
 //});
 
 

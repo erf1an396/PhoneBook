@@ -66,6 +66,23 @@
         });
     }
 
+    function openEditUserRolesModal(userId) {
+        
+        $.ajax({
+            url: '/User/GetUserRoles', 
+            type: 'GET',
+            data: { userId: userId }, 
+            success: function (userRoles) {
+                
+                loadRolesInModal(userRoles);
+            }
+        });
+
+        
+        $('#userModal').modal('show');
+    }
+    
+
     function loadRolesInModal(selectedRoleIds) {
         $.ajax({
             url: '/Role/GetAllRoles',

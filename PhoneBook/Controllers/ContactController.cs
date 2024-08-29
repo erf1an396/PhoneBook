@@ -14,48 +14,49 @@ using System.Security.Claims;
 namespace PhoneBook.Controllers
 {
 
-    
+
     public class ContactController : Controller
     {
         private readonly IContactService _contactService;
         private readonly UserManager<ApplicationUser> _userManger;
-        
 
 
 
-        public ContactController(IContactService contactService , UserManager<ApplicationUser> userManger)
+
+        public ContactController(IContactService contactService, UserManager<ApplicationUser> userManger)
         {
             _contactService = contactService;
             _userManger = userManger;
-            
-           
+
+
         }
 
 
         [HttpGet]
+        
         public async Task<IActionResult> GetContacts()
         {
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier); 
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var contacts = await _contactService.GetContactsAsync(userId);
 
             //if (contacts == null || !contacts.Any())
             //{
             //    return NotFound();
             //}
-            
+
             return Json(contacts);
         }
 
-        public async Task<IActionResult>GetContactByIdAjax(string Id)
+        public async Task<IActionResult> GetContactByIdAjax(string Id)
         {
             var contact = await _contactService.GetContactByIdAsync(Id);
 
             return Json(contact);
         }
 
-        
+
         [HttpPost]
-        
+        [Authorize(Roles = "AddContact")]
         public async Task<IActionResult> CreateAjax([FromBody] CreateContactDto contactDto)
         {
 
@@ -65,31 +66,28 @@ namespace PhoneBook.Controllers
                 return Json(new { success = false, errors = "User not found." });
             }
 
-            contactDto.UserId = user.Id;
+            contactDto.UserId = user.Id.ToString();
 
-            
 
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState.Values.SelectMany(value => value.Errors)
-                    .Select(error => error.ErrorMessage)
-                    .ToList();
-                return Json(new { success = false, errors });
-            }
+            //var errors = ModelState.Values.SelectMany(value => value.Errors)
+            //    .Select(error => error.ErrorMessage)
+            //    .ToList();
+            //return Json(new { success = false, errors });
+
 
             if (contactDto.IsValidPhoneNumber() && contactDto.IsValidName())
             {
-                await _contactService.AddContactAsync(contactDto, user.Id);
+                await _contactService.AddContactAsync(contactDto, user.Id.ToString());
                 return Json(new { success = true });
             }
 
             return Json(new
-                { success = false, errors = ModelState.Values.SelectMany(v => v.Errors).Select(s => s.ErrorMessage) });
+            { success = false, errors = ModelState.Values.SelectMany(v => v.Errors).Select(s => s.ErrorMessage) });
         }
 
 
         [HttpPut]
-        
+        [Authorize(Roles = "UpdateContact")]
         public async Task<IActionResult> EditAjax([FromBody] EditContactDto contactDto)
         {
             if (ModelState.IsValid && contactDto.IsValidPhoneNumber() && contactDto.IsValidName())
@@ -101,7 +99,7 @@ namespace PhoneBook.Controllers
         }
 
         [HttpDelete]
-        
+        [Authorize(Roles = "DeleteContact")]
         public async Task<IActionResult> DeleteAjax(string id)
         {
             await _contactService.DeleteContactAsync(id);
@@ -113,7 +111,7 @@ namespace PhoneBook.Controllers
         public IActionResult Search(string searchText)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            
+
 
             var contacts = _contactService.SearchContactsByName(searchText, userId);
 

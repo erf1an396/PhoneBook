@@ -77,7 +77,7 @@ namespace PhoneBook.CoreLayer.Services.Users
                     UserName = user.UserName,
                     //Role = roles.ToList(),
                     CreatedDate = user.CreatedDate,
-                    Id = user.Id
+                    Id = user.Id.ToString()
                 };
             }
 

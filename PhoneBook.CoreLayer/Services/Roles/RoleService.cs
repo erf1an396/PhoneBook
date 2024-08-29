@@ -25,7 +25,7 @@ namespace PhoneBook.CoreLayer.Services.Roles
         {
             var roles = _roleManger.Roles.Select(r => new RoleDto
             {
-                Id = r.Id,
+                Id = r.Id.ToString(),
                 Name = r.Name
             });
 

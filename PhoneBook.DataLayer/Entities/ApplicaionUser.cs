@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace PhoneBook.DataLayer.Entities
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser<Guid>
     {
         public virtual ICollection<ApplicationUserClaim> Claims { get; set; }
         public virtual ICollection<ApplicationUserLogin> Logins { get; set; }

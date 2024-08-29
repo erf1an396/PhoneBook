@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace PhoneBook.DataLayer.Context
 {
-    public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string, ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin, ApplicationRoleClaim, ApplicationUserToken>
+    public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid, ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin, ApplicationRoleClaim, ApplicationUserToken>
     {
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
@@ -25,6 +25,8 @@ namespace PhoneBook.DataLayer.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            
 
             base.OnModelCreating(modelBuilder);
 

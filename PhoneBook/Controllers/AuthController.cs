@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using PhoneBook.DataLayer.Entities;
 using Microsoft.AspNetCore.Identity;
-using PhoneBook.DataLayer.Migrations;
+
 
 namespace PhoneBook.Controllers
 {

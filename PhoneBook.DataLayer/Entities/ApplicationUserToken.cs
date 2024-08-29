@@ -2,7 +2,7 @@
 
 namespace PhoneBook.DataLayer.Entities;
 
-public class ApplicationUserToken : IdentityUserToken<string>
+public class ApplicationUserToken : IdentityUserToken<Guid>
 {
     public virtual ApplicationUser User { get; set; }
 }

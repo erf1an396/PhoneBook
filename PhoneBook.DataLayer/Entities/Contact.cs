@@ -11,9 +11,9 @@ namespace PhoneBook.DataLayer.Entities
     public  class Contact
     {
         [Key]
-        public string Id { get; set; }
+        public int Id { get; set; }
         
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
 
         public string Name { get; set; }
         

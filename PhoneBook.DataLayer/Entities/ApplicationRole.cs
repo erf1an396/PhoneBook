@@ -2,7 +2,7 @@
 
 namespace PhoneBook.DataLayer.Entities;
 
-public class ApplicationRole : IdentityRole
+public class ApplicationRole : IdentityRole<Guid>
 {
     public virtual ICollection<ApplicationUserRole> UserRoles { get; set; }
     public virtual ICollection<ApplicationRoleClaim> RoleClaims { get; set; }
